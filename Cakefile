@@ -26,12 +26,16 @@ paths={
     "lib"
   ],
 }
+
+manifest = require './src/manifest.json'
+
+
 # file extensions for watching
 exts='coffee|jade'
 # Begin Callback Handlers
 # Callback From 'coffee'
 coffeeCallback=()->
-  exec 'cp lib/sparse.js ../sparse-demo/src/assets/javascript'
+  # exec 'cp lib/sparse.js ../sparse-demo/src/assets/javascript'
   minify()
 # Callback From 'docco'
 doccoCallback=()->
@@ -41,9 +45,8 @@ doccoCallback=()->
 # Compiles Sources
 task 'build', 'Compiles Sources', ()-> build -> log ':)', green
 build = ()->
-  # From Module 'coffee'
-  # Enable coffee-script compiling
-  launch 'coffee', (['-c', '-b', '-o' ].concat paths.coffee), coffeeCallback
+  console.log "coffee --join lib/client.js --compile #{manifest.files.join(' ').replace(/('|\")/g, '')}"
+  exec "coffee --join lib/client.js --compile #{manifest.files.join(' ').replace(/('|\")/g, '')}", coffeeCallback
 
 # ## *watch*
 # watch project src folders and build on change
