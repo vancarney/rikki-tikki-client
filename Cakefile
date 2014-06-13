@@ -45,8 +45,8 @@ doccoCallback=()->
 # Compiles Sources
 task 'build', 'Compiles Sources', ()-> build -> log ':)', green
 build = ()->
-  console.log "coffee --join lib/client.js --compile #{manifest.files.join(' ').replace(/('|\")/g, '')}"
-  exec "coffee --join lib/client.js --compile #{manifest.files.join(' ').replace(/('|\")/g, '')}", coffeeCallback
+  console.log "coffee --join lib/rikki-tikki-client.js --compile #{manifest.files.join(' ').replace(/('|\")/g, '')}"
+  exec "coffee --join lib/rikki-tikki-client.js --compile #{manifest.files.join(' ').replace(/('|\")/g, '')}", coffeeCallback
 
 # ## *watch*
 # watch project src folders and build on change
