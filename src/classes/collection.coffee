@@ -43,7 +43,6 @@ class RikkiTikki.Collection extends Backbone.Collection
           @__params[v] = (JSON.stringify options[v]).replace /\\{2}/g, '\\'
           # deletes param from `options`
           delete options[v]
-    console.log "where=#{@__query}"
     # sets the encoded request data to request header
     opts.data = if !@__query then JSON.stringify @.toJSON() else "where=#{@__query}"
     # sets internal success callback on `options`

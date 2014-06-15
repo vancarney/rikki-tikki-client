@@ -125,8 +125,8 @@ class RikkiTikki.Object extends Backbone.Model
     # calls `toJSON` on __super__
     data = Object.__super__.toJSON.call @, options
     # cleans the object
-    delete data.createdAt
-    delete data.updatedAt
+    delete data.createdAt if data.createdAt
+    delete data.updatedAt if data.updatedAt
     data
   #### toFullJSON(seenObjects)
   # > Encodes Object to Parse formatted JSON object

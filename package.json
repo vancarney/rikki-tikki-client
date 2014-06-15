@@ -4,7 +4,7 @@
   "description": "Client for Rikki-Tikki API Platform",
   "keywords": ["rikki-tikki", "rest", "api", "db", "mongo", "mongodb", "json", "backbone", "underscore", "database", "data", "objects", "user", "role", "batch", "model", "collection", "coffeescript"],
   "version": "0.2.1-alpha",
-  "main":"lib/client.js",
+  "main":"lib/rikki-tikki-client.js",
   "licenses": [
     {
       "type": "MIT",
@@ -13,14 +13,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "github.com/vancarney/sparse.git"
+    "url": "github.com/vancarney/rikki-tikki-client.git"
   },
   "dependencies": {
     "underscore": "~1.4.2",
     "backbone": "~1.0.0"
   },
   "devDependencies": {
-    "rikki-tikki":"git+https://github.com/vancarney/rikki-tikki.git",
+    "rikki-tikki":"git+https://github.com/vancarney/rikki-tikki-client.git",
     "coffee-script": "~1.6.3",
     "jquery": "~1.8.3",
     "mocha": "~1.12.0",

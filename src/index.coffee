@@ -16,9 +16,11 @@ if !global.RikkiTikki
     #### APP_ID 
     # > The Parse API Application Identifier
     APP_ID:undefined
+    APP_ID_PARAM_NAME:'APP_ID'
     #### REST_KEY 
     # > The Parse API REST Access Key
     REST_KEY:undefined
+    REST_KEY_PARAM_NAME:'REST_KEY'
     #### SESSION_TOKEN
     # > The `RikkiTikki.User` Session Token if signed in
     SESSION_TOKEN:undefined
