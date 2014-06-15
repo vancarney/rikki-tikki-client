@@ -123,10 +123,10 @@ class RikkiTikki.Object extends Backbone.Model
   # > Overrides `Backbone.Model.toJSON`
   toJSON : (options)->
     # calls `toJSON` on __super__
-    data = Object.__super__.toJSON.call @, options
+    data = (Object.__super__.toJSON.call @, options) || {}
     # cleans the object
-    delete data.createdAt if data.createdAt
-    delete data.updatedAt if data.updatedAt
+    delete data.createdAt if data.createdAt?
+    delete data.updatedAt if data.updatedAt?
     data
   #### toFullJSON(seenObjects)
   # > Encodes Object to Parse formatted JSON object
