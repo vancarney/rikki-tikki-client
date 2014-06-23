@@ -20,7 +20,7 @@
     "backbone": "~1.0.0"
   },
   "devDependencies": {
-    "rikki-tikki":"git+https://github.com/vancarney/rikki-tikki-client.git",
+    "rikki-tikki":"git+https://github.com/vancarney/rikki-tikki.git",
     "coffee-script": "~1.6.3",
     "jquery": "~1.8.3",
     "mocha": "~1.12.0",
