@@ -4,7 +4,7 @@
   "description": "Client for Rikki-Tikki API Platform",
   "keywords": ["rikki-tikki", "rest", "api", "db", "mongo", "mongodb", "json", "backbone", "underscore", "database", "data", "objects", "user", "role", "batch", "model", "collection", "coffeescript"],
   "version": "0.2.1-alpha",
-  "main":"lib/rikki-tikki-client.js",
+  "main":"./index.js",
   "licenses": [
     {
       "type": "MIT",
