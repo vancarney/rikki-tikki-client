@@ -76,7 +76,7 @@ if !global.RikkiTikki
       else
         throw "option: '#{key}' was not settable"
     @API_URL = @getAPIUrl()
-    (@schemaLoader = new @SchemaLoader)
+    @schemaLoader = new @SchemaLoader namespace: @namespace || 'RikkiTikki'
     .fetch 
       success:  => callback? null, 'ready'
       error:    => callback? 'failed', null

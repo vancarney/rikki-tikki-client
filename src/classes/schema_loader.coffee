@@ -1,12 +1,14 @@
 class RikkiTikki.SchemaLoader extends RikkiTikki.Object
   constructor:(opts={})->
+    @namespace = global[opts.namespace] if opts.namespace?
     delete opts.schema if opts.schema?
     @schema =
       '__meta__':  Object
       '__schemas__':  Object
-    SchemaLoader.__super__.constructor.call @, undefined, opts 
+    SchemaLoader.__super__.constructor.call @, undefined, opts
+  namespace: global.RikkiTikki 
   url:->
-    "#{RikkiTikki.getAPIUrl()}/__schema__"
+    "#{@namespace.getAPIUrl()}/__schema__"
   get:(attr)->
     # Bypass RikkiTikki.Object's `get` function
     SchemaLoader.__super__.constructor.__super__.get.call @, attr
@@ -17,7 +19,7 @@ class RikkiTikki.SchemaLoader extends RikkiTikki.Object
         # traverses the `__schemas__` param on `success`
         _.each keys = _.keys( schemas = @get('__schemas__') || {} ), (v,k)=>
           # creates a new Schema
-          RikkiTikki.createSchema v, schemas[v]
+          @namespace.createSchema v, schemas[v]
           # invokes a success callback if defined when all schemas have been created
           opts.success?() if k == _.keys(keys).length - 1
       # handles an XHR Error event
