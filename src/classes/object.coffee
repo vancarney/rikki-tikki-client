@@ -1,6 +1,6 @@
-#### RikkiTikki.Object
+#### $scope.Object
 # > Represents a single Record Association
-class RikkiTikki.Object extends Backbone.Model
+class $scope.Object extends Backbone.Model
   #### idAttribute
   # > maps our Backbone.Model id attribute to the Api's _id attribute
   idAttribute: '_id'
@@ -11,27 +11,27 @@ class RikkiTikki.Object extends Backbone.Model
     # passes `arguments` to __super__
     super attrs, opts
     # writes warning to console if the Object's `className` was not detected
-    if (@className ?= RikkiTikki.getConstructorName @) == RikkiTikki.UNDEFINED_CLASSNAME
-      console.warn 'RikkiTikki.Object requires className to be defined'
+    if (@className ?= $scope.getConstructorName @) == $scope.UNDEFINED_CLASSNAME
+      console.warn "#{namespace}.Object requires className to be defined"
     # pluralizes the `className`
     else
-      @className = RikkiTikki.Inflection.pluralize @className
-    @setSchema _.extend RikkiTikki.getSchema( @className ) || @__schema, opts.schema || {}
+      @className = $scope.Inflection.pluralize @className
+    @setSchema _.extend $scope.getSchema( @className ) || @__schema, opts.schema || {}
   setSchema:(schema)->
     @__schema = _.extend @__schema, schema
     if (methods = @__schema.methods)?
       _.each methods, (v,k)=> @[k] = ()=> v.apply @, arguments
     if (virtuals = @__schema.virtuals)?
       _.each virtuals, (v,k)=> 
-        @[k] = RikkiTikki.Function.fromString v
+        @[k] = $scope.Function.fromString v
         # console.log @[k]
     if (statics = @__schema.statics)?
-      _.each statics, (v,k)=> RikkiTikki.Object[k] = RikkiTikki.Function.fromString v
+      _.each statics, (v,k)=> $scope.Object[k] = $scope.Function.fromString v
     if @__schema.paths?
       _.each @__schema.paths, (v,k)=> (@defaults ?= {})[k] = v.default || null
   getSchema:-> @__schema
   validate:(attrs={}, opts={})->
-    if RikkiTikki.env != 'development'
+    if $scope.env != 'development'
       for k,v of attrs
         if (path = @getSchema().paths[ k ])?
           for validator in path.validators || []
@@ -42,12 +42,12 @@ class RikkiTikki.Object extends Backbone.Model
   #### url() 
   # > generates a Parse API URL for this object based on the Class name
   url : ->
-    "#{RikkiTikki.getAPIUrl()}/#{@className}#{if !@isNew() then '/'+(@get @idAttribute) else ''}#{if (p=RikkiTikki.querify @__op).length then '?'+p else ''}"
+    "#{$scope.getAPIUrl()}/#{@className}#{if !@isNew() then '/'+(@get @idAttribute) else ''}#{if (p=$scope.querify @__op).length then '?'+p else ''}"
   #### sync(method, model, [options])
   # > Overrides `Backbone.Model.sync` to apply custom API header and data
   sync : (method, model, options={})->
     # obtains new API Header Object
-    opts = RikkiTikki.apiOPTS()
+    opts = $scope.apiOPTS()
     
     encode = (o)->
       if _.isObject o and o.hasOwnProperty '_toPointer' and typeof o._toPointer == 'function' 
@@ -62,7 +62,7 @@ class RikkiTikki.Object extends Backbone.Model
     # sets the encoded request data to request header
     opts.data = if !@_query then JSON.stringify @.toJSON() else "where=#{@_query.toJSON()}"
     # sets `options.url` to avoid duplicate test in `__super__.sync`
-    RikkiTikki.validateRoute options.url ?= _.result(@, 'url') || '/'
+    $scope.validateRoute options.url ?= _.result(@, 'url') || '/'
     
     # calls `sync` on __super__
     Object.__super__.sync.call @, method, model, _.extend( options, opts )
@@ -88,7 +88,7 @@ class RikkiTikki.Object extends Backbone.Model
               (oV.objects ?= []).push v
             else
               k:{__op:"AddRelation", objects:[v]}
-    # attrs = RikkiTikki._encode attrs
+    # attrs = $scope._encode attrs
     s = Object.__super__.set.call @, attrs, opts
     # sets `__isDirty` to true if attributes have changed
     @__isDirty = true if @changedAttributes()
@@ -97,14 +97,14 @@ class RikkiTikki.Object extends Backbone.Model
   # > Overrides `Backbone.Model.save`
   save:(attributes, options={})->
     self = @
-    RikkiTikki.Object._findUnsavedChildren @attributes, children = [], files = []
+    $scope.Object._findUnsavedChildren @attributes, children = [], files = []
     pre.save?() if (pre = @getSchema().pre)?
     if children.length
-      RikkiTikki.Object.saveAll children,
+      $scope.Object.saveAll children,
         completed: (m,r,o) =>
           if m.responseText? and (rt = JSON.parse m.responseText) instanceof Array
             _.each @attributes, (v,k)=>
-              if v instanceof RikkiTikki.Object and v.get?( 'objectId' ) == rt[0].success.objectId
+              if v instanceof $scope.Object and v.get?( 'objectId' ) == rt[0].success.objectId
                 # console.log p = v._toPointer()
                 @attributes[k] = {__op:"AddRelation", objects:[p]} 
           Object.__super__.save.call self, attributes, 
@@ -131,8 +131,8 @@ class RikkiTikki.Object extends Backbone.Model
   #### toFullJSON(seenObjects)
   # > Encodes Object to Parse formatted JSON object
   _toFullJSON: (seenObjects)->
-    # loops on `_.clone` of Object attributes and applies `RikkiTikki._encodes`
-    _.each (json = _.clone @attributes), (v, k) -> json[key] = RikkiTikki._encode v, seenObjects
+    # loops on `_.clone` of Object attributes and applies `$scope._encodes`
+    _.each (json = _.clone @attributes), (v, k) -> json[key] = $scope._encode v, seenObjects
     # loops on `__op` and sets to JSON object
     _.each @__op, (v, k) -> json[v] = k
     # sets `objectId` from `id`
@@ -181,10 +181,10 @@ class RikkiTikki.Object extends Backbone.Model
   dirty:->
     @__isDirty or @hasChanged()
   #### _toPointer()
-  # > Returns a `Pointer` reference of this `Object` for use by `RikkiTikki._encode`
+  # > Returns a `Pointer` reference of this `Object` for use by `$scope._encode`
   _toPointer: ->
     # throws an error if we try to get a`Pointer` of an item with no id
-    throw new Error 'Can\'t serialize an unsaved RikkiTikki.Object' if @isNew()
+    throw new Error "Can't serialize an unsaved #{namespace}.Object" if @isNew()
     # returns the pointer
     __type: 'Pointer'
     className: @className
@@ -197,13 +197,13 @@ class RikkiTikki.Object extends Backbone.Model
     # handles special attributes
     @_mergeMagicFields serverData
     # decodes `serverData`
-    _.each serverData, (v, k) => @_serverData[key] = RikkiTikki._decode k, v
+    _.each serverData, (v, k) => @_serverData[key] = $scope._decode k, v
     # stores `hasData` to object scope
     @_hasData = hasData
     # resets `__isDirty`
     @__isDirty = false
   #### _mergeMagicFields(attrs)
-  # > Returns a `Pointer` reference of this `Object` for use by `RikkiTikki._encode`
+  # > Returns a `Pointer` reference of this `Object` for use by `$scope._encode`
   _mergeMagicFields: (attrs)->
     # loops through field names
     _.each ['id', 'objectId', 'createdAt', 'updatedAt'], (attr)=>
@@ -215,7 +215,7 @@ class RikkiTikki.Object extends Backbone.Model
               @id = attrs[attr] 
             # handles `createdAt` and `updatedAt`
             when 'createdAt', 'updatedAt'
-              @[attr] = if !_.isDate attrs[attr] then RikkiTikki._parseDate attrs[attr] else attrs[attr]
+              @[attr] = if !_.isDate attrs[attr] then $scope._parseDate attrs[attr] else attrs[attr]
           # deletes the attribute
           delete attrs[attr]
           
@@ -246,11 +246,11 @@ class RikkiTikki.Object extends Backbone.Model
     # returns changedAttributes object
     @changedAttributes()
   addRelation:(key,relation)->
-    (@__op ?= new RikkiTikki.OP @).addRelation key, relation
+    (@__op ?= new $scope.OP @).addRelation key, relation
   removeRelation:(key,relation)->
-    (@__op ?= new RikkiTikki.OP @).removeRelation key, relation    
+    (@__op ?= new $scope.OP @).removeRelation key, relation    
   createRelation:(key)->
-    (@__op ?= new RikkiTikki.OP @).relation key 
+    (@__op ?= new $scope.OP @).relation key 
   relation:(key)->
     @createRelation key    
           
@@ -260,40 +260,40 @@ class RikkiTikki.Object extends Backbone.Model
 #
           
           
-#### RikkiTikki.Object._classMap
-# > holder for user defined RikkiTikki.Objects
-RikkiTikki.Object._classMap    = {}
-#### RikkiTikki.Object._getSubclass
-# > returns reference to user defined `RikkiTikki.Object` if `className` can be addressed
-RikkiTikki.Object._getSubclass = (className)->
+#### $scope.Object._classMap
+# > holder for user defined $scope.Objects
+$scope.Object._classMap    = {}
+#### $scope.Object._getSubclass
+# > returns reference to user defined `$scope.Object` if `className` can be addressed
+$scope.Object._getSubclass = (className)->
   # throws error if className is not a string
-  throw 'RikkiTikki.Object._getSubclass requires a string argument.' if !_.isString className
-  # sets className on `RikkiTikki.Object._classMap` if new and returns Class 
-  RikkiTikki.Object._classMap[className] ?= if (clazz = RikkiTikki.Object._classMap[className]) then clazz else RikkiTikki.Object.extend className
-#### RikkiTikki.Object._findUnsavedChildren
-RikkiTikki.Object._findUnsavedChildren = (object, children, files)->
+  throw "#{namespace}.Object._getSubclass requires a string argument." unless _.isString className
+  # sets className on `$scope.Object._classMap` if new and returns Class 
+  $scope.Object._classMap[className] ?= if (clazz = $scope.Object._classMap[className]) then clazz else $scope.Object.extend className
+#### $scope.Object._findUnsavedChildren
+$scope.Object._findUnsavedChildren = (object, children, files)->
   _.each object, (obj)=>
-    if (obj instanceof RikkiTikki.Object)
+    if (obj instanceof $scope.Object)
       children.push obj if obj.dirty()
       return
-    # if (object instanceof RikkiTikki.File)
+    # if (object instanceof $scope.File)
       # files.push obj if !obj.url()
       # return
-#### RikkiTikki.Object._create
-# > Creates an instance of a subclass of RikkiTikki.Object for the given classname
-RikkiTikki.Object._create = (className, attr, opts)->
+#### $scope.Object._create
+# > Creates an instance of a subclass of $scope.Object for the given classname
+$scope.Object._create = (className, attr, opts)->
   # tests for existing Class as Function
-  if typeof (clazz = RikkiTikki.Object._getSubclass className) is 'function'
+  if typeof (clazz = $scope.Object._getSubclass className) is 'function'
     # returns the found class
     return new clazz attr, opts
   else
     # throws error if no class was found
     throw "unable to create #{className}"
-#### RikkiTikki.Object.saveAll
-# > Batch saves a given list of RikkiTikki.Objects
-RikkiTikki.Object.saveAll = (list, options)->
-  # create new `RikkiTikki.Batch` with the passed list
-  (new RikkiTikki.Batch list
+#### $scope.Object.saveAll
+# > Batch saves a given list of $scope.Objects
+$scope.Object.saveAll = (list, options)->
+  # create new `$scope.Batch` with the passed list
+  (new $scope.Batch list
   ).exec
     # calls `Batch.exec` with callbacks
     success:(m,r,o)=>
@@ -302,11 +302,11 @@ RikkiTikki.Object.saveAll = (list, options)->
       options.completed m,r,o if options.completed
     error:(m,r,o)=>
       options.error m,r,o if options.error
-#### RikkiTikki.Object.destroyAll
-# > Batch destroys a given list of RikkiTikki.Objects
-RikkiTikki.Object.destroyAll = (list, options)->
-  # create new `RikkiTikki.Batch` with the passed list
-  (new RikkiTikki.Batch
+#### $scope.Object.destroyAll
+# > Batch destroys a given list of $scope.Objects
+$scope.Object.destroyAll = (list, options)->
+  # create new `$scope.Batch` with the passed list
+  (new $scope.Batch
   ).destroy list, 
     # calls `Batch.destroy` with callbacks
     success:(m,r,o)=>

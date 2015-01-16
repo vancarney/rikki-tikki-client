@@ -1,6 +1,5 @@
 {
   "files":[
-    "src/index.coffee",
     "src/util.coffee",
     "src/inflections.coffee",
     "src/classes/singleton.coffee",

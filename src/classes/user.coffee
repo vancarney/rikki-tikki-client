@@ -1,6 +1,6 @@
-#### RikkiTikki.User
+#### $scope.User
 # > Implements the Parse API `User` Object Type
-class RikkiTikki.User extends RikkiTikki.Object
+class $scope.User extends $scope.Object
   #### defaults
   # > default user values for login
   defaults:
@@ -13,12 +13,12 @@ class RikkiTikki.User extends RikkiTikki.Object
   #### urlMap
   # > Map of routes addressed `__action` type
   urlMap:
-    create:"#{RikkiTikki.API_URI}/users"
-    login:"#{RikkiTikki.API_URI}/login"
-    passwordReset:"#{RikkiTikki.API_URI}/requestPasswordReset"
-    operate:"#{RikkiTikki.API_URI}/users"
+    create:"#{$scope.API_URI}/users"
+    login:"#{$scope.API_URI}/login"
+    passwordReset:"#{$scope.API_URI}/requestPasswordReset"
+    operate:"#{$scope.API_URI}/users"
   #### url()
-  # > Overrides `RikkiTikki.Object.url`
+  # > Overrides `$scope.Object.url`
   url:->
     @urlMap[@__action] + ( if @__action == 'operate' and !@isNew() then "/#{@get 'objectId'}" else '')
   #### signUp(attrs,[options])
@@ -35,8 +35,8 @@ class RikkiTikki.User extends RikkiTikki.Object
     @urlMap['login'] = encodeURI @urlMap['login'].replace /\/login+.*/, "/login?username=#{username}&password=#{password}"
     # initializes `opts` with success callback
     (opts = {}).success = (m,r,o)=>
-      # sets `RikkiTikki.SESSION_TOKEN`
-      RikkiTikki.SESSION_TOKEN = @get 'sessionToken'
+      # sets `$scope.SESSION_TOKEN`
+      $scope.SESSION_TOKEN = @get 'sessionToken'
       # deletes `sessionToken` from attributes
       delete @attributes.sessionToken
       # invokes user defined success callback if exists
@@ -46,8 +46,8 @@ class RikkiTikki.User extends RikkiTikki.Object
   #### logout()
   # > Provides non-supported logout feature as a convenience
   logOut:->
-    # resets `RikkiTikki.SESSION_TOKEN`
-    RikkiTikki.SESSION_TOKEN = undefined
+    # resets `$scope.SESSION_TOKEN`
+    $scope.SESSION_TOKEN = undefined
     # resets `urlMap` address 'login' to default
     @urlMap['login'] = @urlMap['login'].replace /\/login+.*/, '/login'
     # resets id
@@ -64,14 +64,14 @@ class RikkiTikki.User extends RikkiTikki.Object
     # calls `save` on __super__
     User.__super__.save.call @, {email:email}, options
   #### save(attributes, [options])
-  # > Overrides `RikkiTikki.Object.save`
+  # > Overrides `$scope.Object.save`
   save:(attrs, opts)->
     # sets `__action` type to `create` or `operate`
     @__action = (if @.isNew() then 'create' else 'operate')
     # calls `save` on __super__
     User.__super__.save.call @, attrs, opts
   #### destroy([options])
-  # > Overrides `RikkiTikki.Object.destroy`
+  # > Overrides `$scope.Object.destroy`
   destroy:(options)->
     # sets `__action` to 'operate'
     @__action = 'operate'

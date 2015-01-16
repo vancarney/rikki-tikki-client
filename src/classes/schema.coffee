@@ -1,4 +1,4 @@
-class RikkiTikki.Schema extends Object
+class $scope.Schema extends Object
   ## Add
   add: (obj, prefix='')->
     _.each _.keys(obj), (key,k)=>
@@ -7,7 +7,7 @@ class RikkiTikki.Schema extends Object
       if _.isObject( value = obj[key] ) && (value.constructor || value.constructor.name == 'Object') && !value.type
         if (subKeys = _.keys(value)).length 
           _.each subKeys, (subValue, subKey)=>
-            if 0 <= RikkiTikki.SchemaItem.allowed.indexOf subKey
+            if 0 <= $scope.SchemaItem.allowed.indexOf subKey
               @nested[pK] = true
               @add value, "#{pK}."
             else
@@ -22,7 +22,7 @@ class RikkiTikki.Schema extends Object
       # return @paths[path] if @paths[path]
       # return @subpaths[path] if @subpaths[path]
       # return if /\.\d+\.?.*$/.test path then getPositionalPath @, path else undefined
-    # throw "'#{path}' may not be used as a schema pathname" if RikkiTikki.Schema.reserved[path]
+    # throw "'#{path}' may not be used as a schema pathname" if $scope.Schema.reserved[path]
 #    
     # last = (subpaths = path.split /\./).pop()
     # branch = @tree
@@ -32,7 +32,7 @@ class RikkiTikki.Schema extends Object
         # throw "Cannot set nested path '#{path}'. Parent path #{subpaths.slice(0, i).concat([sub]).join '.'} already set to type '#{branch[sub].name}'."
       # branch = branch[sub]
     # branch[last] = _.clone obj
-    @paths[path] = new RikkiTikki.SchemaItem path, obj #Schema.interpretAsType path, obj
+    @paths[path] = new $scope.SchemaItem path, obj #Schema.interpretAsType path, obj
     @
   ## pathType
   pathType: (path)->
@@ -46,9 +46,9 @@ class RikkiTikki.Schema extends Object
     # virtuals = @virtuals
     # parts    = name.split( '.' )
     # name.split( '.' ).reduce ((mem, part, i, arr)-> console.log arguments), @tree
-    # mem[part] || mem[part] = if (i == parts.length-1) then new RikkiTikki.VirtualType options, name else {}
+    # mem[part] || mem[part] = if (i == parts.length-1) then new $scope.VirtualType options, name else {}
     @virtuals[name] = name.split( '.' ).reduce ((mem, part, i, arr)->
-      mem[part] || mem[part] = if (i == arr.length-1) then new RikkiTikki.VirtualType options, name else {}
+      mem[part] || mem[part] = if (i == arr.length-1) then new $scope.VirtualType options, name else {}
     ), @tree
   ## virtualpath
   virtualpath: (name)->
@@ -69,7 +69,7 @@ class RikkiTikki.Schema extends Object
     @methods = {}
     @inherits = {}
     # tests if object is passed Schema
-    if RikkiTikki.isOfType obj, RikkiTikki.Schema
+    if $scope.isOfType obj, $scope.Schema
       # extends itself with passed schema
       _.extend @, obj
     else
@@ -82,15 +82,15 @@ class RikkiTikki.Schema extends Object
         # consumes the sanituzed object
         @add o if o?
   get:(key)->
-    if 0 > _.keys(RikkiTikki.Schema.reserved).indexOf key then @[key] else null
+    if 0 > _.keys($scope.Schema.reserved).indexOf key then @[key] else null
   set:(key,val,_tags)->
-    @[key] = val if _.keys(RikkiTikki.Schema.reserved).indexOf key == -1
+    @[key] = val if _.keys($scope.Schema.reserved).indexOf key == -1
   validate:(path, validator)->
     if (p = @paths[ path ])?
       p.validate validator
     else
       throw "Schema path '#{path}' does not exist"
 ## Schema.reserved
-RikkiTikki.Schema.reserved = _.object _.map """
+$scope.Schema.reserved = _.object _.map """
 on,db,set,get,init,isNew,errors,schema,options,modelName,collection,toObject,emit,_events,_pres,_posts
 """.split(','), (v)->[v,1]

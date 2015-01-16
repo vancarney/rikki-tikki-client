@@ -1,32 +1,32 @@
-#### RikkiTikki.Query
+#### $scope.Query
 #> Provides singleton access to virtualized Backbone.Router instance
-class RikkiTikki.Router extends RikkiTikki.Singleton
+class $scope.Router extends $scope.Singleton
   #### constructor()
   # > Class Constructor Method
   constructor:->
     # virtualizes an instance of Bbackbone.Router
     _router = new Backbone.Router
-    #### RikkiTikki.Router.routes( object )
+    #### $scope.Router.routes( object )
     # > sets routes on Router instance
-    RikkiTikki.Router::routes = (r)=>
+    $scope.Router::routes = (r)=>
       # invokes routes with args
       _router.routes r
-    #### RikkiTikki.Router.routes( route, name, callback )
+    #### $scope.Router.routes( route, name, callback )
     # > adds a route to the Router instance
-    RikkiTikki.Router::route = (r,n,cB)=>
+    $scope.Router::route = (r,n,cB)=>
       # invokes route with args
       _router.route r,n,cB
-    #### RikkiTikki.Router.navigte( path, opts )
+    #### $scope.Router.navigte( path, opts )
     # > navigates to the given path
-    RikkiTikki.Router::navigate = (p,opts)=>
+    $scope.Router::navigate = (p,opts)=>
       # invokes navigate with args
       _router.navigate p,opts
-    #### RikkiTikki.Router.execute( callback, args )
+    #### $scope.Router.execute( callback, args )
     # > executes the matching callback
-    RikkiTikki.Router::execute = (cB, args)=>
+    $scope.Router::execute = (cB, args)=>
       # invokes execute with args
       _router.execute cB, args
-#### RikkiTikki.Router.getInstance()
+#### $scope.Router.getInstance()
 # > returns instance of Router
-RikkiTikki.Router.getInstance = =>
-  @__instance ?= new RikkiTikki.Router()
+$scope.Router.getInstance = =>
+  @__instance ?= new $scope.Router()

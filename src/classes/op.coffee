@@ -1,6 +1,6 @@
-class RikkiTikki.OP extends Object
+class $scope.OP extends Object
   constructor:(@parent)->
-    throw 'No Parent Class provided to new instance of RikkiTikki.OP' if !@parent
+    throw "No Parent Class provided to new instance of #{namespace}.OP" unless @parent
   __op:{}
   toJSON: -> @__op
   __addOp:(attr, type, aName, obj)->
@@ -18,13 +18,13 @@ class RikkiTikki.OP extends Object
   #### relation(attr)
   # > Returns a new Relation Object bound to the specified attribute
   relation: (attr)->
-    throw 'RikkiTikki.Relation requires an attribute' if !attr
-    throw 'No Parent Class defined on instance of RikkiTikki.OP' if !@parent
+    throw "#{namespace}.Relation requires an attribute" unless attr
+    throw "No Parent Class defined on instance of #{namespace}.OP" unless @parent
     if (rel = @parent.get attr)?
-      throw 'called relation() on a non-relation field' if !(val instance of RikkiTikki.Relation)
+      throw 'called relation() on a non-relation field' unless (val instance of $scope.Relation)
       rel._ensureParentAndKey @parent, attr
     else
-      rel = _.extend (new RikkiTikki.Relation @parent, attr),
+      rel = _.extend (new $scope.Relation @parent, attr),
         add:(obj) => @addRelation attr, rel
         remove:(obj) => @removeRelation attr, rel
     rel

@@ -5,6 +5,9 @@ connect = require 'connect'
 {debug, error, log, print} = require 'util'
 # import Spawn and Exec from child_process
 {spawn, exec, execFile}=require 'child_process'
+{_} = require 'underscore'
+_.templateSettings =
+  interpolate: /'\{\{(.+?)\}\}';/g
 # colors
 red   = "\u001b[0;31m"
 green = "\u001b[0;32m"
@@ -36,6 +39,8 @@ exts='coffee|jade'
 # Callback From 'coffee'
 coffeeCallback=()->
   # exec 'cp lib/sparse.js ../sparse-demo/src/assets/javascript'
+  _t = _.template fs.readFileSync '/tmp/index.js', 'utf8'
+  fs.writeFileSync 'lib/rikki-tikki-client.js',  _t {classes:(str = fs.readFileSync '/tmp/classes.js', 'utf8').substr(str.indexOf('\n')+1, str.length-1).replace /\n/g, "\n        "}
   minify()
 # Callback From 'docco'
 doccoCallback=()->
@@ -46,7 +51,9 @@ doccoCallback=()->
 task 'build', 'Compiles Sources', ()-> build -> log ':)', green
 build = ()->
   console.log "coffee --join lib/rikki-tikki-client.js --compile #{manifest.files.join(' ').replace(/('|\")/g, '')}"
-  exec "coffee --join lib/rikki-tikki-client.js --compile #{manifest.files.join(' ').replace(/('|\")/g, '')}", coffeeCallback
+  # exec "coffee --join lib/rikki-tikki-client.js --compile #{manifest.files.join(' ').replace(/('|\")/g, '')}", coffeeCallback
+  exec "coffee -o /tmp -c src/index.coffee", =>
+    exec "coffee --join /tmp/classes.js -b --compile #{manifest.files.join(' ').replace(/('|\")/g, '')}", coffeeCallback
 
 # ## *watch*
 # watch project src folders and build on change

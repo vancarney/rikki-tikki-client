@@ -1,2 +1,2 @@
-class RikkiTikki.Buffer extends ArrayBuffer
+class $scope.Buffer extends ArrayBuffer
     constructor:(len)->

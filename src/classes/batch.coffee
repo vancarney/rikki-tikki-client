@@ -1,6 +1,6 @@
-#### RikkiTikki.Batch
+#### $scope.Batch
 # > Utility Class to Create, Update and Destroy many various Parse Objects in a single request
-class RikkiTikki.Batch extends RikkiTikki.Collection
+class $scope.Batch extends $scope.Collection
   #### constructor(attributes, [options])
   # > Class Constructor Method
   constructor : (attrs, opts)->
@@ -8,12 +8,12 @@ class RikkiTikki.Batch extends RikkiTikki.Collection
   #### url()
   # > provides route to Parse API batch resource
   url : ->
-    "#{RikkiTikki.API_URI}/batch"
+    "#{$scope.API_URI}/batch"
   #### __processed
-  # holder for processed `RikkiTikki.Object`
+  # holder for processed `$scope.Object`
   __processed:[]
   #### processed( [flatten] )
-  # > retrieves processed `RikkiTikki.Object` array
+  # > retrieves processed `$scope.Object` array
   # > `_.flatten` is applied by default
   processed:(flatten=true)->
     # returns array with `_.flatten` optionally applied
@@ -21,10 +21,10 @@ class RikkiTikki.Batch extends RikkiTikki.Collection
   #### toJSON( [options] )
   # > Overrides `Backbone.Collection.toJSON` method to 
   toJSON : (options)->
-    # returns the `RikkiTikki.Objects` as a Parse compatible JSON object
+    # returns the `$scope.Objects` as a Parse compatible JSON object
     JSON.stringify requests : Batch.__super__.toJSON.call @, options
   #### _memberIsNew(attributes)
-  # > Performs check for new `RikkiTikki.Objects` 
+  # > Performs check for new `$scope.Objects` 
   _memberIsNew: (attrs)->
     # returns test for `isNew` and `objectId` properties
     (attrs.hasOwnProperty('isNew') && attrs.isNew()) || (typeof(attrs.get 'objectId')  == 'undefined' || attrs.get 'objectId' == null || attrs.get 'objectId' == "")
@@ -37,10 +37,10 @@ class RikkiTikki.Batch extends RikkiTikki.Collection
     if options.destroy and @_memberIsNew attrs
       obj = null 
     else
-      # replaces the given Model with a RikkiTikki.Batch formatted model 
+      # replaces the given Model with a $scope.Batch formatted model 
       obj =
-        method  :  RikkiTikki.CRUD_METHODS[if options.destroy then 'destroy' else (if @_memberIsNew attrs then 'create' else 'update')]
-        path    : "/#{RikkiTikki.API_VERSION}/classes/#{attrs.className}#{if !@_memberIsNew attrs then '/'+ attrs.get 'objectId' else ''}"
+        method  :  $scope.CRUD_METHODS[if options.destroy then 'destroy' else (if @_memberIsNew attrs then 'create' else 'update')]
+        path    : "/#{$scope.API_VERSION}/classes/#{attrs.className}#{if !@_memberIsNew attrs then '/'+ attrs.get 'objectId' else ''}"
       obj.body = attrs if !options.destroy
     # calls `_prepareModel` on __super__
     Batch.__super__._prepareModel.call @, obj, options
@@ -50,14 +50,14 @@ class RikkiTikki.Batch extends RikkiTikki.Collection
     # returns of no Objects were passed
     return if !model.models or model.models.length == 0
     # prepares to overwrite standard options with API specific headers and params
-    opts      = RikkiTikki.apiOPTS()
+    opts      = $scope.apiOPTS()
     # grabs a subset of our data to fit within Parse's Batch Operation Limit
-    opts.data = JSON.stringify requests : (@__to_remove = model.slice 0, (if RikkiTikki.MAX_BATCH_SIZE >= 0 and RikkiTikki.MAX_BATCH_SIZE < model.models.length then RikkiTikki.MAX_BATCH_SIZE else model.models.length) )
+    opts.data = JSON.stringify requests : (@__to_remove = model.slice 0, (if $scope.MAX_BATCH_SIZE >= 0 and $scope.MAX_BATCH_SIZE < model.models.length then $scope.MAX_BATCH_SIZE else model.models.length) )
     # creates custom success handler for sequential batch operations on large datasets
     opts.success = (m,r,o)=>
-      # applies changes to the referenced `RikkiTikki.Object`, adding the processed objects to the `__processed` array
+      # applies changes to the referenced `$scope.Object`, adding the processed objects to the `__processed` array
       @__processed.push _.map m, (v,k,l) => _.chain(@__to_remove[k].get 'body').tap((_o) ->
-        # passes back the success results if deleted (undefined) or `sets` values on referenced `RikkiTikki.Object`
+        # passes back the success results if deleted (undefined) or `sets` values on referenced `$scope.Object`
         if typeof _o != 'undefined' then _o.set v.success else _o = v.success
       ).value()
       # removes data objects marked for removal during the last operation
@@ -78,13 +78,13 @@ class RikkiTikki.Batch extends RikkiTikki.Collection
     Backbone.sync method, model, _.extend( _.clone(options), opts  )
   #### fetch([options])
   # > Non-Supported `Backbone.Collection` Feature
-  fetch : (options) -> console.warn 'Method: "fetch" is not supported by RikkiTikki.Batch. Use RikkiTikki.Collection instead'
+  fetch : (options) -> console.warn "Method 'fetch' is not supported by #{namespace}.Batch. Use #{namespace}.Collection instead"
   #### exec([options])
   # > Executes the Batch Operation with current Collection
   exec : (options) -> @sync 'create', @, options
   #### destroy(models, [options])
-  # > Adds a Collection of `RikkiTikki.Objects` to be removed from the Parse Service
+  # > Adds a Collection of `$scope.Objects` to be removed from the Parse Service
   destroy : (models, options) -> @add models, _.extend _.clone(options || {}), destroy:true
   #### save(models, [options])
-  # > Adds a Collection of `RikkiTikki.Objects` to be added to the Parse Service
+  # > Adds a Collection of `$scope.Objects` to be added to the Parse Service
   save : (models, options) -> @add models, options

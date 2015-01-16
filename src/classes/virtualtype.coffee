@@ -1,4 +1,4 @@
-class RikkiTikki.VirtualType extends Object
+class $scope.VirtualType extends Object
   getters:[]
   setters:[]
   constructor:(options, name)->

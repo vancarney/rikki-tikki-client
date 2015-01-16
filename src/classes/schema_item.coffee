@@ -1,4 +1,4 @@
-RikkiTikki.Types = 
+$scope.Types = 
   Array:Array
   Buffer:ArrayBuffer
   # Mixed:Object
@@ -6,7 +6,7 @@ RikkiTikki.Types =
   Number:Number
   String:String
   
-class RikkiTikki.SchemaItem
+class $scope.SchemaItem
   constructor:(@path, obj={})->
     # console.log arguments
     # sets up accessible params
@@ -19,7 +19,7 @@ class RikkiTikki.SchemaItem
     @options = {}
     @required = false
     # tests for native object as instance type
-    for key, type of RikkiTikki.Types
+    for key, type of $scope.Types
       if type == obj
         @instance = obj 
         return
@@ -32,7 +32,7 @@ class RikkiTikki.SchemaItem
       @instance = obj.type
       delete obj.type
     if obj and typeof obj == 'object'
-      _.each ((_.partial _.without, _.keys(obj)).apply @, RikkiTikki.SchemaItem.allowed), (v)=> delete obj[v]
+      _.each ((_.partial _.without, _.keys(obj)).apply @, $scope.SchemaItem.allowed), (v)=> delete obj[v]
     # tests for validators
     if obj.validators
       @validators.push obj.validators
@@ -62,4 +62,4 @@ class RikkiTikki.SchemaItem
         @validators.push validator
       else
         throw "Validator requires either Function or Array type was '#{typeof validator}'"
-RikkiTikki.SchemaItem.allowed = "index,default,validators,options,required".split ','
+$scope.SchemaItem.allowed = "index,default,validators,options,required".split ','
