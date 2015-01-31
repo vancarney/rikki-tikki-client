@@ -1,7 +1,6 @@
 # require Node::FS
 fs = require 'fs'
 # require Node::Util
-connect = require 'connect'
 {debug, error, log, print} = require 'util'
 # import Spawn and Exec from child_process
 {spawn, exec, execFile}=require 'child_process'
