@@ -3,10 +3,10 @@
 _               = (require 'underscore')._
 Backbone        = require 'backbone'
 Backbone.$      = require( 'jQuery')
-RikkiTikki      = require('../lib/client.js').RikkiTikki
-RikkiTikki.PORT = port = 3006
-# child_process   = require 'child_process'
-# proc            = child_process.spawn 'node', ['./scripts/server']
+test = (RikkiTikki     = require('../index').RikkiTikki).createScope 'test'
+test.PORT = port = 3006
+child_process   = require 'child_process'
+proc            = child_process.spawn 'node', ['./scripts/server']
 
 # server          = true
 # service          = require './scripts/server'
@@ -19,7 +19,7 @@ RikkiTikki.PORT = port = 3006
 # RikkiTikki.REST_KEY = process.env.PARSE_REST_KEY
 
 # init data to test with
-test = RikkiTikki.createNameSpace 'test'
+# test = RikkiTikki.createNameSpace 'test'
 test.createSchema 'Products', {
   name:String
   price:Number

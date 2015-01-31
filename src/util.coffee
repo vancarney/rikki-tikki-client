@@ -1,68 +1,68 @@
-#### RikkiTikki.apiOPTS
+#### $scope.apiOPTS
 # > Generates a Parse compatible API Header
-RikkiTikki.apiOPTS = ->
+$scope.apiOPTS = ->
   contentType: "application/json"
   processData: false
   dataType: 'json'
   data: null
   headers:
     'Content-Type'      : 'application/json'
-    'X-Application-Id'  : RikkiTikki.APP_ID
-    'X-REST-API-Key'    : RikkiTikki.REST_KEY
-    'X-Session-Token'   : RikkiTikki.SESSION_TOKEN
-#### RikkiTikki.regEscape(string)
+    'X-Application-Id'  : $scope.APP_ID
+    'X-REST-API-Key'    : $scope.REST_KEY
+    'X-Session-Token'   : $scope.SESSION_TOKEN
+#### $scope.regEscape(string)
 # > Returns string as RegExp string literal
-RikkiTikki.regEscape = (string) -> string.replace /([\^\/\.\-\+\*\[\]\{\}\|\(\)\?\$]+)/g,'\\$1'
-RikkiTikki.getAPIUrl = ->
+$scope.regEscape = (string) -> string.replace /([\^\/\.\-\+\*\[\]\{\}\|\(\)\?\$]+)/g,'\\$1'
+$scope.getAPIUrl = ->
   "#{@PROTOCOL.toLowerCase()}://#{@HOST}#{if @PORT != 80 then ':'+@PORT else ''}/#{@BASE_PATH.replace /^\//, ''}/#{@API_VERSION}"
-#### RikkiTikki.validateRoute(route)
+#### $scope.validateRoute(route)
 # > Validates a given route
-RikkiTikki.validateRoute = (route)->
+$scope.validateRoute = (route)->
   # throws error if route does not pass validation
-  throw "Bad route: #{route}" if !route.match new RegExp "^(#{RikkiTikki.regEscape @getAPIUrl()}\/)+"
+  throw "Bad route: #{route}" if !route.match new RegExp "^(#{$scope.regEscape @getAPIUrl()}\/)+"
   # returns true if no error thrown
   true
-#### RikkiTikki._parseDate(iso8601)
+#### $scope._parseDate(iso8601)
 # > Implementation of Parse._parseDate used to parse iso8601 UTC formatted `datetime`
-RikkiTikki._parseDate = (iso8601)->
+$scope._parseDate = (iso8601)->
   # returns null if `iso8601` argument fails `RegExp`
   return null if (t = iso8601.match /^([0-9]{1,4})\-([0-9]{1,2})\-([0-9]{1,2})T+([0-9]{1,2}):+([0-9]{1,2}):?([0-9]{1,2})?(.([0-9]+))?Z+$/) == null
   # returns new `Date` from matched value
   new Date Date.UTC t[1] || 0, (t[2] || 1) - 1, t[3] || 0, t[4] || 0, t[5] || 0, t[6] || 0, t[8] || 0
-#### RikkiTikki.querify(object)
+#### $scope.querify(object)
 # > Returns passes object as Key/Value paired string
-RikkiTikki.querify = (obj)->
+$scope.querify = (obj)->
   ( _.map _.pairs( obj || {} ), (v,k)=>v.join '=' ).join '&'
-#### RikkiTikki.getConstructorName
-# > Attempts to safely determine name of the Class Constructor returns RikkiTikki.UNDEFINED_CLASSNAME as fallback
-RikkiTikki.getConstructorName = (fun)->
-  fun.constructor.name || if (name = RikkiTikki.getFunctionName fun.constructor)? then name else RikkiTikki.UNDEFINED_CLASSNAME
-RikkiTikki.getTypeOf = (obj)-> Object.prototype.toString.call(obj).slice 8, -1
-RikkiTikki.getFunctionName = (fun)->
+#### $scope.getConstructorName
+# > Attempts to safely determine name of the Class Constructor returns $scope.UNDEFINED_CLASSNAME as fallback
+$scope.getConstructorName = (fun)->
+  fun.constructor.name || if (name = $scope.getFunctionName fun.constructor)? then name else $scope.UNDEFINED_CLASSNAME
+$scope.getTypeOf = (obj)-> Object.prototype.toString.call(obj).slice 8, -1
+$scope.getFunctionName = (fun)->
   if (n = fun.toString().match /function+\s{1,}([a-zA-Z]{1,}[_0-9a-zA-Z]?)/)? then n[1] else null
-RikkiTikki.isOfType = (value, kind)->
+$scope.isOfType = (value, kind)->
   (@getTypeOf value) == (@getFunctionName kind) or value instanceof kind
-#### RikkiTikki._encode
+#### $scope._encode
 # > Attempts to JSON encode a given Object
-RikkiTikki._encode = (value, seenObjects, disallowObjects)->
-  # throws error if RikkiTikki.Model is passed while disallowed
-  throw "RikkiTikki.Models not allowed here" if value instanceof RikkiTikki.Model and disallowObjects 
+$scope._encode = (value, seenObjects, disallowObjects)->
+  # throws error if $scope.Model is passed while disallowed
+  throw "$scope.Models not allowed here" if value instanceof $scope.Model and disallowObjects 
   # returns pointer value
-  return value._toPointer() if value instanceof RikkiTikki.Object and value._toPointer? and typeof value._toPointer == 'function' #!seenObjects or _.include(seenObjects, value) or value.attributes != value.defaults
-  # returns encoded RikkiTikki.Model
-  return RikkiTikki._encode value._toFullJSON(seenObjects = seenObjects.concat value), seenObjects, disallowObjects if value.hasOwnProperty 'dirty' and typeof value.dirty == 'Function' and !value.dirty()
+  return value._toPointer() if value instanceof $scope.Object and value._toPointer? and typeof value._toPointer == 'function' #!seenObjects or _.include(seenObjects, value) or value.attributes != value.defaults
+  # returns encoded $scope.Model
+  return $scope._encode value._toFullJSON(seenObjects = seenObjects.concat value), seenObjects, disallowObjects if value.hasOwnProperty 'dirty' and typeof value.dirty == 'Function' and !value.dirty()
   # throws error if the object was new/unsaved
-  throw 'Tried to save Model with a Pointer to an new or unsaved Object.' if value instanceof RikkiTikki.Object and value.isNew()
+  throw 'Tried to save Model with a Pointer to an new or unsaved Object.' if value instanceof $scope.Object and value.isNew()
   # returns Data type as iso encoded object
   return __type:Date, iso: value.toJSON() if _.isDate value
   # returns map of encoded Arrays if value is Array
-  return _.map value, ((v)-> RikkiTikki._encode v, seenObjects, disallowObjects) if _.isArray value
+  return _.map value, ((v)-> $scope._encode v, seenObjects, disallowObjects) if _.isArray value
   # returns source of RegExp if value is RegExp
   return value.source if _.isRegExp value
-  # returns RikkiTikki.Relation as JSON
-  return value.toJSON() if (RikkiTikki.Relation and value instanceof RikkiTikki.Relation) or (RikkiTikki.Op and value instanceof RikkiTikki.Op) or (RikkiTikki.GeoPoint and value instanceof RikkiTikki.GeoPoint)
+  # returns $scope.Relation as JSON
+  return value.toJSON() if ($scope.Relation and value instanceof $scope.Relation) or ($scope.Op and value instanceof $scope.Op) or ($scope.GeoPoint and value instanceof $scope.GeoPoint)
   # returns a File Object as a Pointer
-  if RikkiTikki.File and value instanceof RikkiTikki.File
+  if $scope.File and value instanceof $scope.File
     throw 'Tried to save an object containing an unsaved file.' if !value.url()
     return (
       __type: "File"
@@ -72,29 +72,29 @@ RikkiTikki._encode = (value, seenObjects, disallowObjects)->
   # encodes an arbitrary object
   if _.isObject value
     o = {}
-    _.each value, (v, k) -> o[k] = RikkiTikki._encode v, seenObjects, disallowObjects
+    _.each value, (v, k) -> o[k] = $scope._encode v, seenObjects, disallowObjects
     return o
   # returns raw object as fallback
   value
-#### RikkiTikki._decode
+#### $scope._decode
 # > Attempts to JSON decode a given Object
-RikkiTikki._decode = (key, value)->
+$scope._decode = (key, value)->
   # returns passed value if not an Object
   return value if !_.isObject value
   # handles Array values
   if _.isArray value
     _.each value, (v,k)->
       # recurses each Array value
-      value[k] = RikkiTikki._decode k, v
+      value[k] = $scope._decode k, v
     # returns array if sucessfully decoded
     return value
-  # returns raw value if is `RikkiTikki.Object` 
-  return value if (value instanceof RikkiTikki.Object) or (RikkiTikki.File and value instanceof RikkiTikki.File) or (RikkiTikki.OP and value instanceof RikkiTikki.Op)
-  # returns decoded `RikkiTikki.OP` objects
-  return RikkiTikki.OP._decode value if value.__op
+  # returns raw value if is `$scope.Object` 
+  return value if (value instanceof $scope.Object) or ($scope.File and value instanceof $scope.File) or ($scope.OP and value instanceof $scope.Op)
+  # returns decoded `$scope.OP` objects
+  return $scope.OP._decode value if value.__op
   # recreates from Pointer
   if value.__type and value.__type == 'Pointer'
-    p = RikkiTikki.Object._create value.className
+    p = $scope.Object._create value.className
     p._finishFetch {objectId: value.objectId}, false
     return p
   # recreates from Object
@@ -102,52 +102,52 @@ RikkiTikki._decode = (key, value)->
     cN = value.className
     delete value.__type
     delete value.className
-    o = RikkiTikki.Object._create cN
+    o = $scope.Object._create cN
     o._finishFetch value, true
     return o
   # returns `Date` value
-  return RikkiTikki._parseDate value.iso if value.__type == 'Date'
-  # recreates from `RikkiTikki.GeoPoint` reference
-  if RikkiTikki.GeoPoint and value.__type == 'GeoPoint'
-    return (new RikkiTikki.GeoPoint
+  return $scope._parseDate value.iso if value.__type == 'Date'
+  # recreates from `$scope.GeoPoint` reference
+  if $scope.GeoPoint and value.__type == 'GeoPoint'
+    return (new $scope.GeoPoint
       latitude: value.latitude
       longitude: value.longitude
     )
-  # recreates from `RikkiTikki.Relation` reference
-  if RikkiTikki.Relation and value.__type == 'Relation'
-    (r = new RikkiTikki.Relation null, key).targetClassName = value.className
+  # recreates from `$scope.Relation` reference
+  if $scope.Relation and value.__type == 'Relation'
+    (r = new $scope.Relation null, key).targetClassName = value.className
     return r
-  # recreates from `RikkiTikki.File` reference
-  if RikkiTikki.File and value.__type == 'File'
+  # recreates from `$scope.File` reference
+  if $scope.File and value.__type == 'File'
     (f = new sarse.File value.name).url = value.url
     return f
   # loops on and decodes and arbitrary object
-  _.each value, (v, k) -> value[k] = RikkiTikki._decode k, v
+  _.each value, (v, k) -> value[k] = $scope._decode k, v
   # returns the decoded object
   value
-#### RikkiTikki.Function
+#### $scope.Function
 # > Utils to Serialize, Deserialize and Create Functions
-RikkiTikki.Function = {}
-#### RikkiTikki.Function.construct(constructor, arguments)
+$scope.Function = {}
+#### $scope.Function.construct(constructor, arguments)
 # creates new Function/Object from constructor
-RikkiTikki.Function.construct = (constructor, args)->
+$scope.Function.construct = (constructor, args)->
   new ( constructor.bind.apply constructor, [null].concat args )
-#### RikkiTikki.Function.factory(arguments)
+#### $scope.Function.factory(arguments)
 # creates new unnamed Function from passed arguments
-RikkiTikki.Function.factory = RikkiTikki.Function.construct.bind null, Function
-#### RikkiTikki.Function.fromString(string)
+$scope.Function.factory = $scope.Function.construct.bind null, Function
+#### $scope.Function.fromString(string)
 # deserializes and creates unnamed Function from passed string
-RikkiTikki.Function.fromString = (string)->
+$scope.Function.fromString = (string)->
   if (m = string.match /^function+\s?\(([a-zA-Z0-9_\s\S\,]?)\)+\s?\{([\s\S]*)\}$/)?
-    return RikkiTikki.Function.factory _.union m[1], m[2]
+    return $scope.Function.factory _.union m[1], m[2]
   else 
-    return if (m = string.match new RegExp "^Native::(#{_.keys(RikkiTikki.Function.natives).join '|'})+$")? then RikkiTikki.Function.natives[m[1]] else null
-#### RikkiTikki.Function.toString(Function)
+    return if (m = string.match new RegExp "^Native::(#{_.keys($scope.Function.natives).join '|'})+$")? then $scope.Function.natives[m[1]] else null
+#### $scope.Function.toString(Function)
 # serializes Function to string
-RikkiTikki.Function.toString = (fun)->
+$scope.Function.toString = (fun)->
   return fun if typeof fun != 'function'
-  if ((s = fun.toString()).match /.*\[native code\].*/)? then "Native::#{RikkiTikki.getFunctionName fun}" else s
-RikkiTikki.Function.natives  = 
+  if ((s = fun.toString()).match /.*\[native code\].*/)? then "Native::#{$scope.getFunctionName fun}" else s
+$scope.Function.natives  = 
   'Date':Date
   'Number':Number
   'String':String

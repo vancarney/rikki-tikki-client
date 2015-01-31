@@ -1,4 +1,4 @@
-class RikkiTikki.DocumentArray extends RikkiTikki.Array
+class $scope.DocumentArray extends $scope.Array
     constructor:->
       if doc
         doc.on 'save', arr.notify 'save'

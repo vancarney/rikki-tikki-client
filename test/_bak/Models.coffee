@@ -1,32 +1,35 @@
 (chai           = require 'chai').should()
 _               = (require 'underscore')._
-RikkiTikki      = require('../lib/client').RikkiTikki
+test = (RikkiTikki     = require('../index').RikkiTikki).createScope 'test'
 # # child_process   = require 'child_process'
 # # proc            = child_process.spawn 'node', ['./scripts/server']
-RikkiTikki.env  = 'development'
-fun = (value)->
-  typeof value == 'number'
-schema = {
-  name:String, 
-  description:String,
-  price:{
-    type:Number, 
-    validators:[fun, 'must be a number']
-  }
-}
-# 
-RikkiTikki.createSchema 'Products', _.clone schema
-RikkiTikki.PORT = 3006
-# myNS = RikkiTikki.createNameSpace 'myNS'
+
+# test.env  = 'development'
+# fun = (value)->
+  # typeof value == 'number'
+# schema = {
+  # name:String, 
+  # description:String,
+  # price:{
+    # type:Number, 
+    # validators:[fun, 'must be a number']
+  # }
+# }
+
+
+# # 
+# test.createSchema 'Products', _.clone schema
+# test.PORT = 3006
+# myNS = test.createNameSpace 'myNS'
 # # console.log new myNS.Schema schema
 # 
-describe 'RikkiTikki.Model Test Suite', ->
-  it 'RikkiTikki.Model.saveAll should be STATIC', =>
-    RikkiTikki.Model.saveAll.should.be.a 'function'
+describe 'test.Model Test Suite', ->
+  it 'test.Model.saveAll should be STATIC', =>
+    test.Model.saveAll.should.be.a 'function'
   it 'Model should be extensable', =>
-    (@clazz = class Product extends (RikkiTikki.Model)).should.be.a 'function'
+    (@clazz = class Product extends (test.Model)).should.be.a 'function'
   it 'should safely get it\'s constructor.name', =>
-    (RikkiTikki.getConstructorName @testModel = new @clazz()).should.equal 'Product'
+    (test.getConstructorName @testModel = new @clazz()).should.equal 'Product'
     # console.log @testModel.getSchema()
   it 'should have a pluralized Class Name', =>
     (@testModel).className.should.equal 'Products'

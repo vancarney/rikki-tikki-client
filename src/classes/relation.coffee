@@ -1,5 +1,5 @@
-#### RikkiTikki.Relation
-class RikkiTikki.Relation extends Object
+#### $scope.Relation
+class $scope.Relation extends Object
   constructor:(@parent,@key)->
   _ensureParentAndKey: (parent, key)->
     throw 'Internal Error. Relation retrieved from two different Objects.' if (@parent ?= parent) != parent

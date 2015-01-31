@@ -1,6 +1,6 @@
 #### RikkiTikki.Inflection
 # > String Inflection utility used to convert Class Names
-RikkiTikki.Inflection = new (->
+$scope.Inflection = new (->
   #### __uncountable_words
   # > Holder for array of words that can not be pluralized
   __uncountable_words:['equipment', 'information', 'rice', 'money', 'species', 'series','fish', 'sheep', 'moose', 'deer', 'news']

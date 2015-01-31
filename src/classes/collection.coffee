@@ -1,6 +1,6 @@
-#### RikkiTikki.Collection
+#### $scope.Collection
 # > Implementation of Parse API `Collection`
-class RikkiTikki.Collection extends Backbone.Collection
+class $scope.Collection extends Backbone.Collection
   #### __count
   # > holder for the current `models` length
   __count:undefined
@@ -11,13 +11,13 @@ class RikkiTikki.Collection extends Backbone.Collection
   #### __params
   # > Holder for default Query Arguments
   __params:
-    limit: RikkiTikki.DEFAULT_FETCH_LIMIT_OVERRIDE
+    limit: $scope.DEFAULT_FETCH_LIMIT_OVERRIDE
     count:1
   #### url()
   # > Overrides `Backbone.Collection.url`
   url : ->
     # returns uri encoded Query String
-    encodeURI "#{RikkiTikki.getAPIUrl()}/#{@className}#{if @__method == 'read' and (p=RikkiTikki.querify @__params).length then '?'+p else ''}"
+    encodeURI "#{$scope.getAPIUrl()}/#{@className}#{if @__method == 'read' and (p=$scope.querify @__params).length then '?'+p else ''}"
   #### parse([options])
   # > Overrides `Backbone.Collection.parse`
   parse : (options)->
@@ -33,9 +33,9 @@ class RikkiTikki.Collection extends Backbone.Collection
   # > Override `Backbone.Collection.sync`
   sync : (@__method, model, options={})->
     # gets Parse API Header
-    opts = RikkiTikki.apiOPTS()
+    opts = $scope.apiOPTS()
     # detects if `__method` is type 'read'   
-    if @__method == RikkiTikki.CRUD_METHODS.read
+    if @__method == $scope.CRUD_METHODS.read
       # loops on basic query types
       _.each ['order','count','limit','where'], (v,k)=>
         if options[v]
@@ -49,7 +49,7 @@ class RikkiTikki.Collection extends Backbone.Collection
     opts.success = (m,r,o)=>
       # resets `__params` object
       @__params =
-        limit: RikkiTikki.DEFAULT_FETCH_LIMIT_OVERRIDE
+        limit: $scope.DEFAULT_FETCH_LIMIT_OVERRIDE
         count:1
       @__query?.clear()
       # invokes user defined success callback if present
@@ -78,13 +78,13 @@ class RikkiTikki.Collection extends Backbone.Collection
   virtual:(name, fn)->
     @__schema.virtuals name, fn  
   reserved:->
-    RikkiTikki.Schema.reserved()
+    $scope.Schema.reserved()
   #### query(query, [options])
   # > Applies `Query` to collection and fetches result
   # query : (query, options={})->
     # @fetch _.extend(options, where:query)
   query : ->
-    @__query ?= new RikkiTikki.Query @className
+    @__query ?= new $scope.Query @className
     @__query
   findAll : ->
     @query().limit()
@@ -92,7 +92,7 @@ class RikkiTikki.Collection extends Backbone.Collection
   # > Batch saves Objects that are new or need updating
   save : (options)->
     # loops on `models` and maps array of items that need to be saved
-    (new RikkiTikki.Batch _.compact _.map @models, (v,k) -> v if v.isNew() or v.dirty()
+    (new $scope.Batch _.compact _.map @models, (v,k) -> v if v.isNew() or v.dirty()
     ).exec options
       # calls `Batch.exec` with callbacks
       complete:(m,r,o)=>
@@ -105,17 +105,17 @@ class RikkiTikki.Collection extends Backbone.Collection
     # passes `arguments` to __super__
     super attrs, opts
     # writes warning to console if the Object's `className` was not detected
-    if (@className ?= RikkiTikki.getConstructorName @) == RikkiTikki.UNDEFINED_CLASSNAME
-      console.warn 'RikkiTikki.Collection requires className to be defined'
+    if (@className ?= $scope.getConstructorName @) == $scope.UNDEFINED_CLASSNAME
+      console.warn "#{namespace}.Collection requires className to be defined"
     # pluralizes the `className`
     else
-      @className = RikkiTikki.Inflection.pluralize @className
+      @className = $scope.Inflection.pluralize @className
     # creates new schema from Global Schemas, local schema prototype and opts.schema param
-    @__schema = new RikkiTikki.Schema _.extend RikkiTikki.getSchema( @className ) || {}, @schema, opts.schema || {}
+    @__schema = new $scope.Schema _.extend $scope.getSchema( @className ) || {}, @schema, opts.schema || {}
   ## Query Methods
   #### equalTo:(col, value)
   or:(queries...)->
-    @query().or RikkiTikki.Query.or queries
+    @query().or $scope.Query.or queries
     @
   #### equalTo:(col, value)
   equalTo:(col, value)->
@@ -193,59 +193,59 @@ class RikkiTikki.Collection extends Backbone.Collection
     @__params.skip = value
 ## Static (ActiveRecord Style) Query Methods
 #### equalTo:(col, value)
-RikkiTikki.Collection.equalTo = (col, value)-> 
+$scope.Collection.equalTo = (col, value)-> 
   (new @).equalTo col, value
 #### equalTo:(col, value)
-RikkiTikki.Collection.notEqualTo = (col, value)-> 
+$scope.Collection.notEqualTo = (col, value)-> 
   (new @).notEqualTo col, value
 #### greaterThan:(col, value)
-RikkiTikki.Collection.greaterThan = (col, value)-> 
+$scope.Collection.greaterThan = (col, value)-> 
   (new @).greaterThan col, value
 #### greaterThanOrEqualTo:(col, value)
-RikkiTikki.Collection.greaterThanOrEqualTo = (col, value)-> 
+$scope.Collection.greaterThanOrEqualTo = (col, value)-> 
   (new @).greaterThanOrEqualTo col, value
 #### greaterThan:(col, value)
-RikkiTikki.Collection.lessThan = (col, value)-> 
+$scope.Collection.lessThan = (col, value)-> 
   (new @).lessThan col, value
 #### greaterThanOrEqualTo:(col, value)
-RikkiTikki.Collection.lessThanOrEqualTo = (col, value)-> 
+$scope.Collection.lessThanOrEqualTo = (col, value)-> 
   (new @).lessThanOrEqualTo col, value
 #### contains:(col, value)
-RikkiTikki.Collection.contains = (col, value)->
+$scope.Collection.contains = (col, value)->
   (new @).contains col, value
 #### contains:(col, array)
-RikkiTikki.Collection.containsAll = (col, array)->
+$scope.Collection.containsAll = (col, array)->
   (new @).containsAll col, array
 #### containedIn:(col, array)
-RikkiTikki.Collection.containedIn = (col, array)->
+$scope.Collection.containedIn = (col, array)->
   (new @).containedIn col, array
 #### notContainedIn:(col, array)
-RikkiTikki.Collection.notContainedIn = (col, array)->
+$scope.Collection.notContainedIn = (col, array)->
   (new @).notContainedIn col, array
 #### contains:(col, value)
-RikkiTikki.Collection.inQuery = (col,query)->
+$scope.Collection.inQuery = (col,query)->
   (new @).inQuery col, query
 #### contains:(col, value)
-RikkiTikki.Collection.notInQuery = (col,query)->
+$scope.Collection.notInQuery = (col,query)->
   (new @).notInQuery col, query
 #### or:(queries...)
-RikkiTikki.Collection.orQuery = (queries...)->
+$scope.Collection.orQuery = (queries...)->
   (new @).orQuery queries
 #### include(value)
-RikkiTikki.Collection.include = (value)->
+$scope.Collection.include = (value)->
   (new @).include = value
 #### keys(value)
-RikkiTikki.Collection.keys = (array)->
+$scope.Collection.keys = (array)->
   (new @).keys =  value
 #### count(bool)
-RikkiTikki.Collection.count = (bool)->
+$scope.Collection.count = (bool)->
   (new @).count =  bool
 #### order(value)
-RikkiTikki.Collection.order = (value)->
+$scope.Collection.order = (value)->
   (new @).order = value
 #### limit(value)
-RikkiTikki.Collection.limit = (value)->
+$scope.Collection.limit = (value)->
   (new @).limit = value
 #### skip(value)
-RikkiTikki.Collection.skip = (value)->
+$scope.Collection.skip = (value)->
   (new @).skip = value

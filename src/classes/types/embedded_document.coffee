@@ -1,2 +1,2 @@
-class RikkiTikki.EmbeddedDocument extends RikkiTikki.Model
+class $scope.EmbeddedDocument extends $scope.Model
   constructor:(obj, parentArr, skipId, fields)->

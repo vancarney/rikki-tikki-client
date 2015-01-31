@@ -1,4 +1,4 @@
-class RikkiTikki.Array extends Array
+class $scope.Array extends Array
   _atomics: {}
   validators: []
   _path: null

@@ -1,7 +1,7 @@
-class RikkiTikki.Singleton extends Object
+class $scope.Singleton extends Object
   constructor:->
     # references the constructor name for the sub-class
-    cName = RikkiTikkiAPI.getConstructorName @
+    cName = $scope.getConstructorName @
     # references the caller from the sub-class
     _caller       = arguments.callee.caller.caller
     # references the caller's sub-classee
@@ -11,7 +11,7 @@ class RikkiTikki.Singleton extends Object
       _caller_super = _caller
       _caller       = _caller.caller
     # tests if this object is sub-classes
-    isDescended = (RikkiTikkiAPI.getFunctionName arguments.callee.caller.__super__.constructor ) == 'Singleton'
+    isDescended = ($scope.getFunctionName arguments.callee.caller.__super__.constructor ) == 'Singleton'
     # defines a test method to insure that the caller was invoked with a getInstance method
     matchSig = ((sig)=>
       (sig.replace /[\n\t]|[\s]{2,}/g, '' ) == "function () {return this.__instance != null ? this.__instance : this.__instance = new #{cName}();}"

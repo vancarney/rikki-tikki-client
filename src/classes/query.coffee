@@ -1,5 +1,5 @@
-#### RikkiTikki.Query
-class RikkiTikki.Query
+#### $scope.Query
+class $scope.Query
   __q:{}
   __include: []
   __limit: -1
@@ -9,8 +9,8 @@ class RikkiTikki.Query
   # > Class Constructor Method
   constructor:(classOrName)->
     if classOrName?
-      @objectClass = if _.isString classOrName then RikkiTikki.Object._getSubclass classOrName else classOrName
-      @className = @objectClass.className || RikkiTikki.getConstructorName @objectClass
+      @objectClass = if _.isString classOrName then $scope.Object._getSubclass classOrName else classOrName
+      @className = @objectClass.className || $scope.getConstructorName @objectClass
     @or = @_or
     @in = @_in
     @clear()
@@ -20,10 +20,10 @@ class RikkiTikki.Query
   # > Executes query and returns all results
   find:(opts={})->
     throw 'valid Class required' if typeof @objectClass != 'function'
-    (new @objectClass).sync( RikkiTikki.CRUD_METHODS.read, [], _.extend opts, {where:@__q}
+    (new @objectClass).sync( $scope.CRUD_METHODS.read, [], _.extend opts, {where:@__q}
     ).then (s,r,o)=>
       _.each r.results, (v,k)=>
-        (obj = if v.className then new RikkiTikki.Object v.className else new @objectClass)._finishFetch v, true
+        (obj = if v.className then new $scope.Object v.className else new @objectClass)._finishFetch v, true
         obj
   #### first([options])
   # > Executes query and returns only the first result
@@ -68,7 +68,7 @@ class RikkiTikki.Query
   lessThanOrEqualTo:(col, value)->
     @set col, '$lte', value
   contains:(col, val)->
-    @set col, '$regex', val #"#{RikkiTikki.Query._quote val}"
+    @set col, '$regex', val #"#{$scope.Query._quote val}"
   #### containsAll(column, array)
   # > Sets condition that column value must be an array containing all items in given array
   containsAll:(col,array)->
@@ -84,9 +84,9 @@ class RikkiTikki.Query
   notInQuery:(col,query)->
     @set col, '$notInQuery', where:query
   _or:(queries...)->
-    @__q['$or'] = (@__q['$or'] ?= []).concat RikkiTikki.Query.or queries
+    @__q['$or'] = (@__q['$or'] ?= []).concat $scope.Query.or queries
   relatedTo:(object, key)->
-    throw new Error 'RikkiTikki.Query.$relatedTo required object be of Type RikkiTikki.Object' if !(object instanceof RikkiTikki.Object) and object.className?
+    throw new Error "#{namespace}.Query.$relatedTo required object be of Type #{namespace}.Object" unless (object instanceof $scope.Object) and object.className?
     @set null, "$relatedTo", 
       object:
         __type: "Pointer"
@@ -107,11 +107,11 @@ class RikkiTikki.Query
     @set null, 'skip', "#{value}"
   arrayKey:(col,value)->
     @set null, col, "#{value}"
-RikkiTikki.Query.or = (queries...)->
+$scope.Query.or = (queries...)->
   className = null
   _.each queries, (q)=>
     throw "All queries must be of the same class" if (className ?= q.className) != q.className
   _.map _.flatten(queries), (v,k)-> if v.query? then v.query().__q else v
 #### _quote(string)
 # > Implementation of Parse _quote to create RegExp from string value
-RikkiTikki.Query._quote = (s)-> "\\Q#{s}\\E"
+$scope.Query._quote = (s)-> "\\Q#{s}\\E"
