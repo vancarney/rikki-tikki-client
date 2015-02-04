@@ -88,12 +88,15 @@ test = (options=[],callback)->
     if typeof options is 'function'
       callback = options
       options = []
+
     # add coffee directive
     options.push '--compilers'
-    options.push 'coffee:coffee-script'
+    options.push 'coffee:coffee-script/register'
     options.push '--reporter'
     options.push 'spec'
-    
+    # options.push '-g'
+    # options.push 'Query+'
+    console.log options.join ' '
     launch 'mocha', options, callback
     
 task 'import:demo', 'Import the demo project build', (callback)-> import_demo -> log ':)', green

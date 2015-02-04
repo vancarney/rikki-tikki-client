@@ -75,7 +75,8 @@ unless global.RikkiTikki
       $scope
     app = 
       createScope: (ns, schema={})->
-        _.extend new _appLayer(ns), {namespace:ns, schema:schema} unless global[ns]
+        return global[ns] if global[ns]
+        _.extend new _appLayer(ns), {namespace:ns, schema:schema}
       # RikkiTikki.createCollection = (name, options={})->
         # new (RikkiTikki.Collection.extend options, className:name)
       initialize: (opts={}, callback)->
