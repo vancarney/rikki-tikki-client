@@ -32,7 +32,7 @@ class $scope.User extends $scope.Object
     # sets `__action` type to 'login'
     @__action = 'login'
     # sets `urlMap` address 'login' to parameterized query string
-    @urlMap['login'] = encodeURI @urlMap['login'].replace /\/login+.*/, "/login?username=#{username}&password=#{password}"
+    # @urlMap['login'] = encodeURI @urlMap['login'].replace /\/login+.*/, "/login?username=#{username}&password=#{password}"
     # initializes `opts` with success callback
     (opts = {}).success = (m,r,o)=>
       # sets `$scope.SESSION_TOKEN`
@@ -42,18 +42,33 @@ class $scope.User extends $scope.Object
       # invokes user defined success callback if exists
       options.success m,r,o if options.success
     # calls `fetch`
+    @save {username:username, password:password}, _.extend _.clone(options), opts
+  #### restore(token)
+  #> restores login session from stored sessionToken
+  restore:(token,options={})->
+    @urlMap['login'] = encodeURI "#{@urlMap['login']}/#{token}"
+    # initializes `opts` with success callback
+    (opts = {}).success = (m,r,o)=>
+      # sets `$scope.SESSION_TOKEN`
+      $scope.SESSION_TOKEN = @get 'sessionToken'
+      # deletes `sessionToken` from attributes
+      delete @attributes.sessionToken
+      # invokes user defined success callback if exists
+      options.success?.apply @, arguments
+    # calls `fetch`
     @fetch _.extend _.clone(options), opts
   #### logout()
   # > Provides non-supported logout feature as a convenience
-  logOut:->
-    # resets `$scope.SESSION_TOKEN`
-    $scope.SESSION_TOKEN = undefined
-    # resets `urlMap` address 'login' to default
-    @urlMap['login'] = @urlMap['login'].replace /\/login+.*/, '/login'
-    # resets id
-    @id = null
-    # resets `attributes` to `defaults`
-    @set @defaults
+  logOut:(options={})->
+    opts = success = =>
+      # resets `$scope.SESSION_TOKEN`
+      $scope.SESSION_TOKEN = undefined
+      # resets id
+      @id = null
+      # resets `attributes` to `defaults`
+      @set @defaults
+      options.success?.apply @, arguments
+    @destroy
   #### resetPassword([options])
   # > Provides Parse API resetPassword feature
   resetPassword:(options)->
