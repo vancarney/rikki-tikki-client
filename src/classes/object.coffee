@@ -7,7 +7,7 @@ class $scope.Object extends Backbone.Model
   __schema:{paths:{}, virtuals:{}}
   #### constructor(attrs, opts)
   # > Class Constructor Method
-  constructor:(attrs, opts={})->
+  constructor:(attrs={}, opts={})->
     # passes `arguments` to __super__
     super attrs, opts
     # writes warning to console if the Object's `className` was not detected
