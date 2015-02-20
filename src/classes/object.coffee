@@ -79,10 +79,10 @@ class $scope.Object extends Backbone.Model
   set:(attrs, opts={})->
     if attrs? and _.isObject attrs
       _.each attrs, (v,k)=>
-        if @__schema.virtuals[attr]
+        if @__schema.virtuals[k]
           attr = (if _.isArray (v = @__schema.virtuals[k]) then v else [v]).reduce (prev,curr,idx,arr)=> curr.apply @, value 
         else
-          if v.hasOwnProperty '_toPointer' and typeof v._toPointer == 'Function'
+          if v?.hasOwnProperty '_toPointer' and typeof v._toPointer == 'Function'
             v = v._toPointer() 
             if (oV = @get k )?.__op?
               (oV.objects ?= []).push v
