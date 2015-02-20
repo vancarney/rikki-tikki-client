@@ -77,7 +77,7 @@ class $scope.Object extends Backbone.Model
   #### set(attributes, [options])
   # > Overrides `Backbone.Model.set`
   set:(attrs, opts={})->
-    if _.isObject attrs
+    if attrs? and _.isObject attrs
       _.each attrs, (v,k)=>
         if @__schema.virtuals[attr]
           attr = (if _.isArray (v = @__schema.virtuals[k]) then v else [v]).reduce (prev,curr,idx,arr)=> curr.apply @, value 
