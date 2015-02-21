@@ -41,8 +41,8 @@ class $scope.User extends $scope.Object
       delete @attributes.sessionToken
       # invokes user defined success callback if exists
       options.success m,r,o if options.success
-    # calls `fetch`
-    @save {username:username, password:password}, _.extend _.clone(options), opts
+    # calls `save`
+    User.__super__.save.call @, {username:username, password:password}, _.extend _.clone(options), opts
   #### restore(token)
   #> restores login session from stored sessionToken
   restore:(token,options={})->
