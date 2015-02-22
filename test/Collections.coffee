@@ -1,12 +1,13 @@
-# fs              = require 'fs'
+fs              = require 'fs'
 (chai           = require 'chai').should()
 _               = (require 'underscore')._
 Backbone        = require 'backbone'
-Backbone.$      = require( 'jQuery')
-test = (RikkiTikki     = require('../index').RikkiTikki).createScope 'test'
-test.PORT = port = 3006
-child_process   = require 'child_process'
-proc            = child_process.spawn 'node', ['./scripts/server']
+Backbone.$      = require 'jQuery'
+{RikkiTikki}    = require '../index'
+jsonData        = require './data.json'
+server          = true
+API             = RikkiTikki.createScope 'api'
+API.PORT        = 3000
 
 # server          = true
 # service          = require './scripts/server'
@@ -20,13 +21,13 @@ proc            = child_process.spawn 'node', ['./scripts/server']
 
 # init data to test with
 # test = RikkiTikki.createNameSpace 'test'
-test.createSchema 'Products', {
+API.createSchema 'Products', {
   name:String
   price:Number
   description:String
 }
 
-clazz = class Products extends test.Collection 
+clazz = class Products extends API.Collection 
 # _.each require( './data/products.json' ).Products, (v,k)=>
   # model = new clazz
   # h = 
@@ -70,6 +71,56 @@ describe 'RikkiTikki.Collections Test Suite', ->
         done()
       error:->
         console.log arguments
+        
+describe 'API.Batch and API.Collections', ->
+  @timeout 15000
+  @data = new (class TestCompanies extends API.Collection
+    model: class TestCompany extends API.Object
+      defaults:
+        name:""
+        contact_email:""
+        tagline:""
+  )
+  @data.set jsonData.TestCompanies
+  @batch = new API.Batch
+  @batch.save @data.models
+  it 'Should Batch Save', (done)=>
+    @batch.exec
+      complete:(m,r,o)=>
+        done()
+      success:(m,r,o)=>
+      error:(m,r,o)=>
+        console.log m
+  it 'Should Query Records on the Server', (done)=>
+    @data.reset {}
+    @data.query active:true,
+      success:(m,r,o)=>
+        @data.models.length.should.equal 51
+        done()
+  it 'Should mark items for deletion', (done)=>
+    @data.reset {}
+    @data.fetch
+      success: (m,r,o)=>
+        @batch.destroy @data.models
+        done()
+      error: (m,r,o)=>
+        console.log r
+  it 'Should have a count of Records on the Server', =>
+    @data.count().should.equal 101
+  it 'Should Batch Delete', (done)=>
+    @batch.exec
+      complete:(m,r,o)=>
+        done()
+      error: (m,r,o)=>
+        console.log m
+  it 'Should have deleted all data records', (done)=>
+    @data.reset {}
+    @data.fetch
+      success: (m,r,o)=>
+        @data.count().should.equal 0
+        done()
+      error: (m,r,o)=>
+        console.log r
         
         
 # # describe 'RikkiTikki.SchemaLoader Test Suite', ->
