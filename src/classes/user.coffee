@@ -4,9 +4,15 @@ class $scope.User extends $scope.Object
   #### defaults
   # > default user values for login
   defaults:
-    username:null
-    password:null
+    # name:null
     email:null
+    password:null
+    password_confirmation:null
+    # mobile:null
+    # address:null
+    # city:null
+    # state:null
+    # postal:null
   #### __action
   # > holds the action type
   __action:'operate'
@@ -19,8 +25,8 @@ class $scope.User extends $scope.Object
     operate:"#{$scope.API_URI}/users"
   #### url()
   # > Overrides `$scope.Object.url`
-  url:->
-    @urlMap[@__action] + ( if @__action == 'operate' and !@isNew() then "/#{@get 'objectId'}" else '')
+  # url:->
+    # @urlMap[@__action] + ( if @__action == 'operate' and !@isNew() then "/#{@get 'objectId'}" else '')
   #### signUp(attrs,[options])
   # > Provides Parse API User.signUp feature
   signUp:(attrs, options)->

@@ -40,9 +40,9 @@ class $scope.Object extends Backbone.Model
           return "#{@className} has no attribute '#{k}'" if k != @idAttribute
     return
   #### url() 
-  # > generates a Parse API URL for this object based on the Class name
+  # > generates an API URL for this object based on the Class name
   url : ->
-    "#{$scope.getAPIUrl()}/#{@className}#{if !@isNew() then '/'+(@get @idAttribute) else ''}#{if (p=$scope.querify @__op).length then '?'+p else ''}"
+    "#{$scope.getAPIUrl()}/#{unless $scope.CAPITALIZE_CLASSNAMES then @className.toLowerCase() else @className}#{if !@isNew() then '/'+(@get @idAttribute) else ''}#{if (p=$scope.querify @__op).length then '?'+p else ''}"
   #### sync(method, model, [options])
   # > Overrides `Backbone.Model.sync` to apply custom API header and data
   sync : (method, model, options={})->

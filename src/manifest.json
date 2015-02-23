@@ -9,6 +9,8 @@
     "src/classes/batch.coffee",
     "src/classes/user.coffee",
     "src/classes/users.coffee",
+    "src/classes/login.coffee",
+    "src/classes/auth.coffee",
     "src/classes/virtualtype.coffee",
     "src/classes/router.coffee",
     "src/classes/schema_item.coffee",
