@@ -63,21 +63,21 @@ class $scope.Collection extends Backbone.Collection
   _prepareModel:(attrs, options)->
     options.schema = _.extend @schema || {}, options.schema || {}
     Collection.__super__._prepareModel.call @, attrs, options
-  add:(obj,prefix)->
+  schemaAdd:(obj,prefix)->
     @__schema.add obj, prefix
-  get:(key)->
+  schemaGet:(key)->
     @__schema.get key
-  set:(key, value, _tags)->
+  schemaSet:(key, value, _tags)->
     @__schema.set key, value, _tags
-  index:(fields,opts)->
+  schemaIndex:(fields,opts)->
     @__schema fields, opts
-  method:(name, fn)->
+  schemaMethod:(name, fn)->
     @__schema.method name, fn 
-  static:(name,fn)->
+  schemaStatic:(name,fn)->
     @__schema.static name, fn 
-  virtual:(name, fn)->
+  schemaVirtual:(name, fn)->
     @__schema.virtuals name, fn  
-  reserved:->
+  schemaReserved:->
     $scope.Schema.reserved()
   #### query(query, [options])
   # > Applies `Query` to collection and fetches result
