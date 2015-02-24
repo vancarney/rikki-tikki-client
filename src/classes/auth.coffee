@@ -10,6 +10,14 @@ class $scope.Auth extends $scope.Object
     @isAuthenticated = => token?
     # virtualizes user login helper method
     @login = (username, password, options)=>
+      success = options.success || null
+      _.extend options, {
+        success:(m,r,o)=>
+          $scope.SESSION_TOKEN  = r.session_id
+          $scope.CSRF_TOKEN     = r.csrf_token
+          console.log r
+          success?.apply @, arguments
+      }
       (login ?= new $scope.Login).login username, password, options
     # virtualizes user logout helper method
     @logout = (options)=>

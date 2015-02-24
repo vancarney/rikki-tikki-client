@@ -28,8 +28,11 @@ unless global.RikkiTikki
         REST_KEY:undefined
         REST_KEY_PARAM_NAME:'REST_KEY'
         #### SESSION_TOKEN
-        # > The `RikkiTikki.User` Session Token if signed in
+        # > The User's Session Token if signed in
         SESSION_TOKEN:undefined
+        #### SESSION_TOKEN
+        # > The User's CSRF Authentication Token for anti-forgery
+        CSRF_TOKEN:undefined
         #### API_VERSION
         # The supported Parse API Version Number
         API_VERSION:'1'

@@ -1,15 +1,18 @@
 #### $scope.apiOPTS
 # > Generates a Parse compatible API Header
 $scope.apiOPTS = ->
-  contentType: "application/json"
-  processData: false
-  dataType: 'json'
-  data: null
-  headers:
-    'Content-Type'      : 'application/json'
-    'X-Application-Id'  : $scope.APP_ID
-    'X-REST-API-Key'    : $scope.REST_KEY
-    'X-Session-Token'   : $scope.SESSION_TOKEN
+  console.log "'X-Session-Token': #{$scope.SESSION_TOKEN}"
+  o = 
+    contentType: "application/json"
+    processData: false
+    dataType: 'json'
+    data: null
+    headers:
+      'Content-Type'      : 'application/json'
+      'X-Application-Id'  : $scope.APP_ID
+      'X-REST-API-Key'    : $scope.REST_KEY
+      'X-Session-Token'   : $scope.SESSION_TOKEN
+      'X-CSRF-Token'      : $scope.CSRF_TOKEN
 #### $scope.regEscape(string)
 # > Returns string as RegExp string literal
 $scope.regEscape = (string) -> string.replace /([\^\/\.\-\+\*\[\]\{\}\|\(\)\?\$]+)/g,'\\$1'
