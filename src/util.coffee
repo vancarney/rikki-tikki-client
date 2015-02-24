@@ -13,6 +13,8 @@ $scope.apiOPTS = ->
       'X-REST-API-Key'    : $scope.REST_KEY
       'X-Session-Token'   : $scope.SESSION_TOKEN
       'X-CSRF-Token'      : $scope.CSRF_TOKEN
+      'X-User-Token'      : $scope.USER_TOKEN
+      'X-User-Email'      : $scope.USER_EMAIL
 #### $scope.regEscape(string)
 # > Returns string as RegExp string literal
 $scope.regEscape = (string) -> string.replace /([\^\/\.\-\+\*\[\]\{\}\|\(\)\?\$]+)/g,'\\$1'

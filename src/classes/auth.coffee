@@ -1,13 +1,15 @@
 #### RikkiTikki.Auth
 # > Authentication Provider Interface
 class $scope.Auth extends $scope.Object
+  idAttribute:'session_id'
   constructor:(token)->
     # _.extend @, Backbone.Events
     user  = new $scope.User
     login = null
     token ?= null
     # virtualizes user authentidation test helper method
-    @isAuthenticated = => token?
+    @isAuthenticated = =>
+      @attributes?[@idAttribute]?
     # virtualizes user login helper method
     @login = (username, password, options)=>
       success = options.success || null
@@ -15,6 +17,8 @@ class $scope.Auth extends $scope.Object
         success:(m,r,o)=>
           $scope.SESSION_TOKEN  = r.session_id
           $scope.CSRF_TOKEN     = r.csrf_token
+          $scope.USER_EMAIL     = r.user_email
+          $scope.USER_TOKEN     = r.user_token
           console.log r
           success?.apply @, arguments
       }
