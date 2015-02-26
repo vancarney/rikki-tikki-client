@@ -42,7 +42,11 @@ class $scope.Object extends Backbone.Model
   #### url() 
   # > generates an API URL for this object based on the Class name
   url : ->
-    "#{$scope.getAPIUrl()}/#{unless $scope.CAPITALIZE_CLASSNAMES then @className.toLowerCase() else @className}#{if !@isNew() then '/'+(@get @idAttribute) else ''}#{if (p=$scope.querify @__op).length then '?'+p else ''}"
+    base    = $scope.getAPIUrl()
+    ref     = unless $scope.CAPITALIZE_CLASSNAMES then @className.toLowerCase() else @className
+    item    = unless @isNew() then "/#{@get @idAttribute}" else ''
+    search  = if (p=$scope.querify @__op).length then "?#{p}" else ''
+    "#{base}/#{ref}#{item}#{search}"
   #### sync(method, model, [options])
   # > Overrides `Backbone.Model.sync` to apply custom API header and data
   sync : (method, model, options={})->
