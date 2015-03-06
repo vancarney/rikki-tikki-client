@@ -72,6 +72,8 @@ unless global.RikkiTikki
           if (s = @__SCHEMAS__[name])? then s else null
         createSchema: (name, options={})->
           if (s = @getSchema name)? then _.extend s, options else $scope.__SCHEMAS__[name] = new @Schema options
+        extend:(object)->
+          _.extend @, object
       '{{classes}}'
       # $scope.schemaLoader: new $scope.SchemaLoader namespace: ns
       # .fetch 

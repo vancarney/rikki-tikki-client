@@ -19,7 +19,6 @@ class $scope.Auth extends $scope.Object
           $scope.CSRF_TOKEN     = r.csrf_token
           $scope.USER_EMAIL     = r.user_email
           $scope.USER_TOKEN     = r.user_token
-          console.log r
           success?.apply @, arguments
       }
       (login ?= new $scope.Login).login username, password, options

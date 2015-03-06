@@ -4,7 +4,7 @@ fs = require 'fs'
 {debug, error, log, print} = require 'util'
 # import Spawn and Exec from child_process
 {spawn, exec, execFile}=require 'child_process'
-{_} = require 'underscore'
+{_} = require 'lodash'
 _.templateSettings =
   interpolate: /'\{\{(.+?)\}\}';/g
 # colors

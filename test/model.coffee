@@ -65,48 +65,48 @@ API.PORT        = 3000
 # 
 # console.log API.getAPIUrl()
 
-describe 'API.Model lifecycle', ->
-  it 'API.Model.saveAll should be STATIC', =>
-    API.Model.saveAll.should.be.a 'function'
-  it 'Model should be extensable', =>
-    (@clazz = class Test extends API.Model).should.be.a 'function'
-  it 'should safely get it\'s constructor.name', =>
-    (API.getConstructorName @testModel = new @clazz()).should.equal 'Test'
-  it 'should have a pluralized Class Name', =>
-    (@testModel).className.should.equal 'Tests'
-  it 'should save Data to an API Service', (done)=>
-    @timeout 15000
-    o = 
-      name:"A Test"
-      description: "Testing Object create via Rikki-Tikki API Client"
-    h = 
-      validate: false
-      success:(m,r,o)=>
-        done()
-      error:(m,r,o)=>
-        console.log arguments
-        throw 'done goofed'
-    @testModel.save o, h
-  it 'should have an ObjectID after saving', =>
-    (@testModel.get '_id').should.not.equal null
-  it 'should update Data to the API', (done)=>
-    @timeout 15000
-    o =
-      active:true
-    h = 
-      validate:false
-      success:(m,r,o)=>
-        done()
-      error:(m,r,o)=>
-        console.log arguments
-        throw 'done goofed'
-    @testModel.save o, h
-  it 'should delete it\'s self from the API DB', (done)=>
-    h = 
-      validate:false
-      success:(m,r,o)=>
-        done()
-      error:(m,r,o)=>
-        console.log arguments
-        throw 'done goofed'
-    @testModel.destroy h
+# describe 'API.Model lifecycle', ->
+  # it 'API.Model.saveAll should be STATIC', =>
+    # API.Model.saveAll.should.be.a 'function'
+  # it 'Model should be extensable', =>
+    # (@clazz = class Test extends API.Model).should.be.a 'function'
+  # it 'should safely get it\'s constructor.name', =>
+    # (API.getConstructorName @testModel = new @clazz()).should.equal 'Test'
+  # it 'should have a pluralized Class Name', =>
+    # (@testModel).className.should.equal 'Tests'
+  # it 'should save Data to an API Service', (done)=>
+    # @timeout 15000
+    # o = 
+      # name:"A Test"
+      # description: "Testing Object create via Rikki-Tikki API Client"
+    # h = 
+      # validate: false
+      # success:(m,r,o)=>
+        # done()
+      # error:(m,r,o)=>
+        # console.log arguments
+        # throw 'done goofed'
+    # @testModel.save o, h
+  # it 'should have an ObjectID after saving', =>
+    # (@testModel.get '_id').should.not.equal null
+  # it 'should update Data to the API', (done)=>
+    # @timeout 15000
+    # o =
+      # active:true
+    # h = 
+      # validate:false
+      # success:(m,r,o)=>
+        # done()
+      # error:(m,r,o)=>
+        # console.log arguments
+        # throw 'done goofed'
+    # @testModel.save o, h
+  # it 'should delete it\'s self from the API DB', (done)=>
+    # h = 
+      # validate:false
+      # success:(m,r,o)=>
+        # done()
+      # error:(m,r,o)=>
+        # console.log arguments
+        # throw 'done goofed'
+    # @testModel.destroy h

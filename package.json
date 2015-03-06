@@ -16,7 +16,7 @@
     "url": "github.com/vancarney/rikki-tikki-client.git"
   },
   "dependencies": {
-    "underscore": "~1.4.2",
+    "lodash": "3.3.1",
     "backbone": "~1.0.0"
   },
   "devDependencies": {

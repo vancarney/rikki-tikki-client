@@ -1,7 +1,6 @@
 #### $scope.apiOPTS
 # > Generates a Parse compatible API Header
 $scope.apiOPTS = ->
-  console.log "'X-Session-Token': #{$scope.SESSION_TOKEN}"
   o = 
     contentType: "application/json"
     processData: false
