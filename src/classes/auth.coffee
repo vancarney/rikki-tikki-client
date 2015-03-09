@@ -7,16 +7,6 @@ class $scope.Auth extends $scope.Object
     user  = new $scope.User
     login = null
     token ?= null
-    createOptions:(options)->
-      success = options.success || null
-      _.extend options, {
-        success:(m,r,o)=>
-          $scope.SESSION_TOKEN  = r.session_id
-          $scope.CSRF_TOKEN     = r.csrf_token
-          $scope.USER_EMAIL     = r.user_email
-          $scope.USER_TOKEN     = r.user_token
-          success?.apply @, arguments
-      }
     # virtualizes user authentidation test helper method
     @isAuthenticated = =>
       @attributes?[@idAttribute]?

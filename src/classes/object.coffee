@@ -5,6 +5,16 @@ class $scope.Object extends Backbone.Model
   # > maps our Backbone.Model id attribute to the Api's _id attribute
   idAttribute: '_id'
   __schema:{paths:{}, virtuals:{}}
+  createOptions:(options)->
+    success = options.success || null
+    _.extend options, {
+      success:(m,r,o)=>
+        $scope.SESSION_TOKEN  = r.session_id
+        $scope.CSRF_TOKEN     = r.csrf_token
+        $scope.USER_EMAIL     = r.user_email
+        $scope.USER_TOKEN     = r.user_token
+        success?.apply @, arguments
+    }
   #### constructor(attrs, opts)
   # > Class Constructor Method
   constructor:(attrs={}, opts={})->
