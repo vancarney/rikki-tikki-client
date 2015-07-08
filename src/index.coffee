@@ -4,7 +4,7 @@ global = exports ? window
 # Includes Backbone & Underscore if the environment is NodeJS
 _           = global._ || unless typeof exports is 'undefined' then require 'lodash' else null
 Backbone    = global.Backbone || unless typeof exports is 'undefined' then require 'backbone' else null
-Backbone.$  = global.jQuery || unless typeof exports is 'undefined' then require 'jQuery' else null
+Backbone.$  = global.jQuery || unless typeof exports is 'undefined' then require 'jquery' else null
 unless global.RikkiTikki
   #### global.RikkiTikki
   # > Defines the `RikkiTikki` namespace in the 'global' environment
