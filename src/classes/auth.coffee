@@ -2,11 +2,10 @@
 # > Authentication Provider Interface
 class $scope.Auth extends $scope.Object
   idAttribute:'session_id'
-  constructor:(token)->
-    # _.extend @, Backbone.Events
+  constructor:->
     user  = new $scope.User
     login = null
-    token ?= null
+    _token = null
     # virtualizes user authentidation test helper method
     @isAuthenticated = =>
       @attributes?[@idAttribute]?
@@ -18,7 +17,8 @@ class $scope.Auth extends $scope.Object
       (login ?= new $scope.Login token:token).logout arguments
     # virtualizes user session restoration helper method
     @restore = (token, options)=>
-      (login ?= new $scope.Login token:token).restore token, @createOptions options
+      _token = token
+      (login ?= new $scope.Login token:_token).restore _token, @createOptions options
     # virtualizes user settings getter method
     @getUser = => user.attributes
     # virtualizes user settings setter method
@@ -27,5 +27,5 @@ class $scope.Auth extends $scope.Object
     @saveUser = (attributes, options)=> user.save attributes, @createOptions options
     # virtualizes user registration helper method
     @registerUser = (attributes, options)=> @saveUser attributes, @createOptions options
-    # automatically restores session if token is set
-    @restore token if token?
+  @getInstance: ->
+    @__instance ?= new @
