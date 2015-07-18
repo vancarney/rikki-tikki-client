@@ -55,7 +55,10 @@ class $scope.Object extends Backbone.Model
     base    = $scope.getAPIUrl()
     ref     = unless $scope.CAPITALIZE_CLASSNAMES then @className.toLowerCase() else @className
     item    = unless @isNew() then "/#{@get @idAttribute}" else ''
-    search  = if (p=$scope.querify @__op).length then "?#{p}" else ''
+    # search  = if (p=$scope.querify @__op).length then "?#{p}" else ''
+    _preQ  = if @params? then @params else '?'
+    _query = $scope.querify @__op
+    search = if _query.length then "#{_preQ}&#{_query}" else _preQ
     "#{base}/#{ref}#{item}#{search}"
   #### sync(method, model, [options])
   # > Overrides `Backbone.Model.sync` to apply custom API header and data
