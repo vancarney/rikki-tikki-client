@@ -63,9 +63,10 @@ class $scope.Object extends Backbone.Model
   #### sync(method, model, [options])
   # > Overrides `Backbone.Model.sync` to apply custom API header and data
   sync : (method, model, options={})->
+    # sets `params` attribute if present in options object
+    @params = options.params if options.hasOwnProperty 'params'
     # obtains new API Header Object
     opts = $scope.apiOPTS()
-    
     encode = (o)->
       if _.isObject o and o.hasOwnProperty '_toPointer' and typeof o._toPointer == 'function' 
         o = o._toPointer()
