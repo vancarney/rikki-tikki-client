@@ -10,15 +10,16 @@ class $scope.Login extends $scope.Object
     # overrides default pluralized upper-case classname
     @className = "login"
   validate:(o)->
-    email = o.email || @attributes.email || null
-    password = o.token || @attributes.password || null
-    token = o.token || @attributes.token || null
+    email     = o.email || @attributes.email || null
+    password  = o.password || @attributes.password || null
+    token     = o[@idAttribute] || @attributes[@idAttribute] || null
     # tests for basic authentication
     if email?
       # invalidates if password IS NOT set
       return "password required" unless password?
-      # invalidates if token IS set
-      return "password required" if  token?
+    if password?
+      # invalidates if email IS NOT set
+      return "email required" unless email?
     # tests for bearer token authentication
     if token?
       # invalidates if email IS set
@@ -26,6 +27,10 @@ class $scope.Login extends $scope.Object
       # invalidates if password IS set
       return "token based authentication does not use password" if password?
   login:(email, password, options)->
+    _.extend options,
+      success:=>
+        throw "INVALID RESPONSE:\n#{JSON.stringify arguments[1]}" unless ($scope.SESSION_TOKEN = @attributes[@idAttribute])?
+        options.success?.apply @, arguments 
     @save {email:email, password:password}, options
   logout:(options)->
     @destroy()
