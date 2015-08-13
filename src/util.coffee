@@ -10,10 +10,9 @@ $scope.apiOPTS = ->
       'Content-Type'      : 'application/json'
       'X-Application-Id'  : $scope.APP_ID
       'X-REST-API-Key'    : $scope.REST_KEY
-      'X-Session-Token'   : $scope.SESSION_TOKEN
       'X-CSRF-Token'      : $scope.CSRF_TOKEN
-      'X-User-Token'      : $scope.USER_TOKEN
       'X-User-Email'      : $scope.USER_EMAIL
+  o.headers[$scope.SESSION_KEY] = $scope.SESSION_TOKEN
 #### $scope.regEscape(string)
 # > Returns string as RegExp string literal
 $scope.regEscape = (string) -> string.replace /([\^\/\.\-\+\*\[\]\{\}\|\(\)\?\$]+)/g,'\\$1'

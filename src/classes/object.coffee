@@ -9,10 +9,9 @@ class $scope.Object extends Backbone.Model
     success = options.success || null
     _.extend options, {
       success:(m,r,o)=>
-        $scope.SESSION_TOKEN  = r.session_id
+        $scope.SESSION_TOKEN  = r.id || r.session_id || r.session || r.user_token || r.token
         $scope.CSRF_TOKEN     = r.csrf_token
-        $scope.USER_EMAIL     = r.user_email
-        $scope.USER_TOKEN     = r.user_token
+        $scope.USER_EMAIL     = r.user_email || r.email
         success?.apply @, arguments
     }
   #### constructor(attrs, opts)
