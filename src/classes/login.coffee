@@ -21,12 +21,12 @@ class $scope.Login extends $scope.Object
       # invalidates if email IS NOT set
       return "email required" unless email?
     # tests for bearer token authentication
-    if token?
-      console.log "token: #{token}"
-      # invalidates if email IS set
-      return "token based authentication does not use email address" if email?
-      # invalidates if password IS set
-      return "token based authentication does not use password" if password?
+    # if token?
+      # console.log "token: #{token}"
+      # # invalidates if email IS set
+      # return "token based authentication does not use email address" if email?
+      # # invalidates if password IS set
+      # return "token based authentication does not use password" if password?
   login:(email, password, options)->
     _.extend options,
       success:=>

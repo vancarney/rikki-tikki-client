@@ -3,7 +3,7 @@
 class $scope.Object extends Backbone.Model
   #### idAttribute
   # > maps our Backbone.Model id attribute to the Api's _id attribute
-  idAttribute: '_id'
+  # idAttribute: '_id'
   __schema:{paths:{}, virtuals:{}}
   createOptions:(options)->
     success = options.success || null
@@ -21,7 +21,7 @@ class $scope.Object extends Backbone.Model
     super attrs, opts
     # writes warning to console if the Object's `className` was not detected
     if (@className ?= $scope.getConstructorName @) == $scope.UNDEFINED_CLASSNAME
-      console.warn "#{namespace}.Object requires className to be defined"
+      console.warn "#{$scope.namespace}.Object requires className to be defined"
     # pluralizes the `className`
     else
       @className = $scope.Inflection.pluralize @className
