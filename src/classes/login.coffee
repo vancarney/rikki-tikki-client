@@ -1,7 +1,7 @@
 #### $scope.Login
 # > Implements Login functionality
 class $scope.Login extends $scope.Object
-  idAttribute:'token'
+  # idAttribute:'token'
   defaults:
     email:String
     password:String
