@@ -1,14 +1,16 @@
 #### RikkiTikki.Auth
 # > Authentication Provider Interface
 class $scope.Auth extends $scope.Object
-  idAttribute:'session_id'
+  # idAttribute:'session_id'
   constructor:->
     user  = new $scope.User
     login = null
     _token = null
+    @getToken = =>
+      login?.attributes?[@idAttribute] || null
     # virtualizes user authentidation test helper method
-    @isAuthenticated = =>
-      @attributes?[@idAttribute]?
+    @isAuthenticated = => 
+      (@getToken())?
     # virtualizes user login helper method
     @login = (username, password, options={})=>
       @trigger 'authenticating'
