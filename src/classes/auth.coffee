@@ -10,7 +10,7 @@ class $scope.Auth extends $scope.Object
     @isAuthenticated = =>
       @attributes?[@idAttribute]?
     # virtualizes user login helper method
-    login = (username, password, options)=>
+    @login = (username, password, options)=>
       @trigger 'authenticating'
       _opts = _.extend @createOptions( options ), {
         success:=>
