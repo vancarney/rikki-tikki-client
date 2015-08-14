@@ -12,7 +12,8 @@ class $scope.Auth extends $scope.Object
     # virtualizes user login helper method
     @login = (username, password, options)=>
       @trigger 'authenticating'
-      _opts = _.extend @createOptions( options ), {
+      options = @createOptions options
+      _opts = _.extend options, {
         success:=>
           @trigger 'authenticated', login.attributes
           options.success?.apply @, arguments
@@ -21,7 +22,7 @@ class $scope.Auth extends $scope.Object
     # virtualizes user logout helper method
     @logout = (options)=>
       @trigger 'deauthenticating'
-      _opts = _.extend @createOptions( options ), {
+      _opts = _.extend {}, @createOptions( options ), {
         success:=>
           @trigger 'deauthenticated', login.attributes
           options.success?.apply @, arguments
@@ -31,7 +32,7 @@ class $scope.Auth extends $scope.Object
     @restore = (token, options)=>
       _token = token
       @trigger 'authenticating'
-      _opts = _.extend @createOptions( options ), {
+      _opts = _.extend {}, @createOptions( options ), {
         success:=>
           @trigger 'authenticated', login.attributes
           options.success?.apply @, arguments
