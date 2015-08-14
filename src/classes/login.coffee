@@ -27,15 +27,20 @@ class $scope.Login extends $scope.Object
       # return "token based authentication does not use email address" if email?
       # # invalidates if password IS set
       # return "token based authentication does not use password" if password?
-  login:(email, password, options)->
-    _.extend options,
+  login:(email, password, options={})->
+    _opts = _.extend {}, options,
       success:=>
         throw "INVALID RESPONSE:\n#{JSON.stringify arguments[1]}" unless ($scope.SESSION_TOKEN = @attributes[@idAttribute])?
         options.success?.apply @, arguments 
-    @save {email:email, password:password}, options
-  logout:(options)->
-    @destroy()
-  restore:(token, options)->
-    @fetch token:token, options
+    @save {email:email, password:password}, _opts
+  logout:(options={})->
+    _opts = _.extend {}, options,
+      success:=>
+        options.success?.apply @, arguments 
+    @destroy _opts
+  restore:(token, options={})->
+    _opts = _.extend {}, options,
+      success:=> options.success?.apply @, arguments 
+    @fetch token:token, _opts
   isAuthenticated:->
     @attributes[@idAttribute]?

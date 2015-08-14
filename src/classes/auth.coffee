@@ -10,17 +10,17 @@ class $scope.Auth extends $scope.Object
     @isAuthenticated = =>
       @attributes?[@idAttribute]?
     # virtualizes user login helper method
-    @login = (username, password, options)=>
+    @login = (username, password, options={})=>
       @trigger 'authenticating'
       options = @createOptions options
-      _opts = _.extend options, {
+      _opts = _.extend {}, options, {
         success:=>
           @trigger 'authenticated', login.attributes
           options.success?.apply @, arguments
       }
       (login ?= new $scope.Login).login username, password, _opts
     # virtualizes user logout helper method
-    @logout = (options)=>
+    @logout = (options={})=>
       @trigger 'deauthenticating'
       _opts = _.extend {}, @createOptions( options ), {
         success:=>
@@ -29,7 +29,7 @@ class $scope.Auth extends $scope.Object
       }
       (login ?= new $scope.Login).logout _opts
     # virtualizes user session restoration helper method
-    @restore = (token, options)=>
+    @restore = (token, options={})=>
       _token = token
       @trigger 'authenticating'
       _opts = _.extend {}, @createOptions( options ), {
