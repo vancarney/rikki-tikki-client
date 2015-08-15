@@ -25,6 +25,7 @@ class $scope.Auth extends $scope.Object
     # virtualizes user logout helper method
     @logout = (options={})=>
       @trigger 'deauthenticating'
+      login.attributes = {}
       _opts = _.extend {}, @createOptions( options ), {
         success:=>
           @trigger 'deauthenticated', login.attributes
