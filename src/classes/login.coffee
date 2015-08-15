@@ -39,8 +39,10 @@ class $scope.Login extends $scope.Object
         options.success?.apply @, arguments 
     @destroy _opts
   restore:(token, options={})->
-    _opts = _.extend {}, options,
-      success:=> options.success?.apply @, arguments 
-    @fetch token:token, _opts
+    return throw "token required" unless token?
+    return throw "token expected to be type 'string' type was <#{type}>" unless (type = typeof token) is 'string'
+    @fetch _.extend {}, options,
+      url: "#{@url()}/restore/#{token}"
+      success:=> options.success?.apply @, arguments
   isAuthenticated:->
     @attributes[@idAttribute]?
