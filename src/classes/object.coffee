@@ -9,7 +9,7 @@ class $scope.Object extends Backbone.Model
     success = options.success || null
     _.extend options, {
       success:(m,r,o)=>
-        r = {id:null, csrf_token:null, user_email} unless r?
+        r = {id:null, csrf_token:null, user_email:null} unless r?
         $scope.SESSION_TOKEN  = r.id || r.session_id || r.session || r.user_token || r.token
         $scope.CSRF_TOKEN     = r.csrf_token
         $scope.USER_EMAIL     = r.user_email || r.email
