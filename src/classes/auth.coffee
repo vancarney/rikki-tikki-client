@@ -2,6 +2,7 @@
 # > Authentication Provider Interface
 class $scope.Auth extends $scope.Object
   # idAttribute:'session_id'
+  persist: false
   constructor:->
     user  = new $scope.User
     login = null
