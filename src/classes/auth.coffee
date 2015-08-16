@@ -25,13 +25,13 @@ class $scope.Auth extends $scope.Object
     # virtualizes user logout helper method
     @logout = (options={})=>
       @trigger 'deauthenticating'
-      login.attributes = {}
+      return unless login?
       _opts = _.extend {}, @createOptions( options ), {
         success:=>
-          @trigger 'deauthenticated', login.attributes
+          @trigger 'deauthenticated', login.attributes = {}
           options.success?.apply @, arguments
       }
-      (login ?= new $scope.Login).logout _opts
+      login.logout _opts
     # virtualizes user session restoration helper method
     @restore = (token, options={})=>
       _token = token
