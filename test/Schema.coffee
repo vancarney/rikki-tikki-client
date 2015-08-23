@@ -16,7 +16,6 @@ describe 'RikkiTikki.Schema Test Suite', ->
         illegal:true
         validators:[ ((value)-> typeof value == 'string'), 'must be string']
     @schema.should.be.a 'object'
-    (@schema instanceof RikkiTikki.Schema).should.equal true
   it 'Schema should create paths', =>
     @schema.paths.name.path.should.equal 'name'
   it 'Schema should define an instance from a passed native Object', =>

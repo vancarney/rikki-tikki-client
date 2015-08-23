@@ -9,6 +9,7 @@ unless global.RikkiTikki
   #### global.RikkiTikki
   # > Defines the `RikkiTikki` namespace in the 'global' environment
   RikkiTikki = global.RikkiTikki = (->
+    $extend = {}
     _appLayer = (ns)->
       throw "Namespace required to be type 'String'. Type was '<#{type}>'" unless (type = typeof ns) is 'string'
       $scope = global["#{ns}"] =
@@ -80,11 +81,11 @@ unless global.RikkiTikki
       # .fetch 
         # success:  => callback? null, 'ready'
         # error:    => callback? 'failed', null
-      $scope
+      _.extend $scope, $extend
     app = 
       createScope: (ns, schema={})->
         return global[ns] if global[ns]
-        _.extend new _appLayer(ns), {namespace:ns, schema:schema}
+        _.extend new _appLayer(ns), $extend, {namespace:ns, schema:schema}
       # RikkiTikki.createCollection = (name, options={})->
         # new (RikkiTikki.Collection.extend options, className:name)
       initialize: (opts={}, callback)->
@@ -94,4 +95,6 @@ unless global.RikkiTikki
             @[key] = value
           else
             throw "option: '#{key}' was not settable"
+      extend:(object)->
+        _.extend $extend, object
   )()
