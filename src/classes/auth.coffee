@@ -18,6 +18,7 @@ class $scope.Auth extends $scope.Object
       options = @createOptions options
       _opts = _.extend {}, options, {
         success:=>
+          user.set id: login.attributes.userId
           @trigger 'authenticated', login.attributes
           options.success?.apply @, arguments
       }
@@ -28,6 +29,7 @@ class $scope.Auth extends $scope.Object
       return unless login?
       _opts = _.extend {}, @createOptions( options ), {
         success:=>
+          user.clear()
           @trigger 'deauthenticated', login.attributes = {}
           options.success?.apply @, arguments
       }
