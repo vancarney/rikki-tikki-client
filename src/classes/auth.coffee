@@ -40,6 +40,7 @@ class $scope.Auth extends $scope.Object
       @trigger 'authenticating'
       _opts = _.extend {}, @createOptions( options ), {
         success:=>
+          user.set id: login.attributes.userId
           @trigger 'authenticated', login.attributes
           options.success?.apply @, arguments
       }
