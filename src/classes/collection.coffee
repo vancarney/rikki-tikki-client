@@ -121,6 +121,8 @@ class $scope.Collection extends Backbone.Collection
     # pluralizes the `className`
     else
       @className = $scope.Inflection.pluralize @className
+    # generates model class with ClassName
+    @model = $scope.Object.extend className: @className
     # creates new schema from Global Schemas, local schema prototype and opts.schema param
     @__schema = new $scope.Schema _.extend $scope.getSchema( @className ) || {}, @schema, opts.schema || {}
   ## Query Methods
