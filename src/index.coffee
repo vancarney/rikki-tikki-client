@@ -70,6 +70,7 @@ unless global.RikkiTikki
           read:   'GET'
           update: 'PUT'
           destroy:'DELETE'
+        QUERY_PARAM: 'filter'
         getSchema: (name)->
           if (s = @__SCHEMAS__[name])? then s else null
         createSchema: (name, options={})->

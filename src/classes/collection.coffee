@@ -55,7 +55,7 @@ class $scope.Collection extends Backbone.Collection
           # deletes param from `options`
           delete options[v]
     # sets the encoded request data to request header
-    opts.data = if !@__query then JSON.stringify @.toJSON() else "where=#{@__query}"
+    opts.data = if !@__query then JSON.stringify @.toJSON() else "#{$scope.QUERY_PARAM}=#{@__query}"
     # sets internal success callback on `options`
     opts.success = (m,r,o)=>
       # resets `__params` object

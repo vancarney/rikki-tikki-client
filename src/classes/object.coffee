@@ -78,7 +78,7 @@ class $scope.Object extends Backbone.Model
         if _.isArray v
           _.map v, (o) => if _.isObject then encode o else o
     # sets the encoded request data to request header
-    opts.data = if !@_query then JSON.stringify @.toJSON() else "where=#{@_query.toJSON()}"
+    opts.data = if !@_query then JSON.stringify @.toJSON() else "#{$scope.QUERY_PARAM}=#{@_query.toJSON()}"
     # sets `options.url` to avoid duplicate test in `__super__.sync`
     $scope.validateRoute options.url ?= _.result(@, 'url') || '/'
     
