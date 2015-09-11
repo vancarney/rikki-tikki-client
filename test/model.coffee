@@ -65,7 +65,7 @@ API.PORT        = 3000
 # 
 # console.log API.getAPIUrl()
 
-# describe 'API.Model lifecycle', ->
+describe 'API.Model lifecycle', ->
   # it 'API.Model.saveAll should be STATIC', =>
     # API.Model.saveAll.should.be.a 'function'
   # it 'Model should be extensable', =>
@@ -101,6 +101,10 @@ API.PORT        = 3000
         # console.log arguments
         # throw 'done goofed'
     # @testModel.save o, h
+  it 'should support queries', =>
+    o = new API.Model
+    o.params = "?filter=#{JSON.stringify {hello:'kitty'}}"
+    console.log o.url()
   # it 'should delete it\'s self from the API DB', (done)=>
     # h = 
       # validate:false

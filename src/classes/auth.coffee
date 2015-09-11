@@ -45,6 +45,10 @@ class $scope.Auth extends $scope.Object
           options.success?.apply @, arguments
       }
       (login ?= new $scope.Login).restore _token, _opts
+    @resetPassword = (model, options)->
+      user.unset 'password_confirmation'
+      user.set model
+      user.resetPassword options
     # virtualizes user settings getter method
     @getUser = => user.attributes
     # virtualizes user settings setter method

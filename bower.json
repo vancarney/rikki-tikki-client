@@ -10,7 +10,26 @@
   "moduleType": [
     "globals"
   ],
-  "keywords": ["rikki-tikki", "rest", "api", "db", "mongo", "mongodb", "json", "backbone", "underscore", "database", "data", "objects", "user", "role", "batch", "model", "collection", "coffeescript"],
+  "keywords": [
+    "rikki-tikki",
+    "rest",
+    "api",
+    "db",
+    "mongo",
+    "mongodb",
+    "json",
+    "backbone",
+    "underscore",
+    "database",
+    "data",
+    "objects",
+    "user",
+    "role",
+    "batch",
+    "model",
+    "collection",
+    "coffeescript"
+  ],
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -18,7 +37,10 @@
     "bower_components",
     "test"
   ],
-  "dependencies":{
-  	"backbone-xhr-events":"1.0.1"
+  "dependencies": {
+    "backbone": "^1.2.3",
+    "backbone-xhr-events": "^1.0.1",
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.1"
   }
 }
