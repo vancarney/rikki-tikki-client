@@ -17,6 +17,11 @@ Rakefile
 ################
 node_modules/*
 
+
+# Bower Components #
+####################
+bower_components/*
+
 # Environment settings #
 ########################
 *.env
