@@ -36,7 +36,7 @@ $scope._parseDate = (iso8601)->
 #### $scope.querify(object)
 # > Returns passes object as Key/Value paired string
 $scope.querify = (obj)->
-  ( _.map _.pairs( obj || {} ), (v,k)=>v.join '=' ).join '&'
+  ( _.map _.toPairs( obj || {} ), (v,k)=>v.join '=' ).join '&'
 #### $scope.getConstructorName
 # > Attempts to safely determine name of the Class Constructor returns $scope.UNDEFINED_CLASSNAME as fallback
 $scope.getConstructorName = (fun)->

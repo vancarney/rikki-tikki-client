@@ -91,6 +91,6 @@ class $scope.Schema extends Object
     else
       throw "Schema path '#{path}' does not exist"
 ## Schema.reserved
-$scope.Schema.reserved = _.object _.map """
+$scope.Schema.reserved = _.zipObject _.map """
 on,db,set,get,init,isNew,errors,schema,options,modelName,collection,toObject,emit,_events,_pres,_posts
 """.split(','), (v)->[v,1]
