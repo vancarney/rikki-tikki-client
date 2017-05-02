@@ -39,7 +39,10 @@ exts='coffee|jade'
 coffeeCallback=()->
   # exec 'cp lib/sparse.js ../sparse-demo/src/assets/javascript'
   _t = _.template fs.readFileSync '/tmp/index.js', 'utf8'
-  fs.writeFileSync 'lib/rikki-tikki-client.js',  _t {classes:(str = fs.readFileSync '/tmp/classes.js', 'utf8').substr(str.indexOf('\n')+1, str.length-1).replace /\n/g, "\n        "}
+  str = fs.readFileSync '/tmp/classes.js', 'utf8'
+  str = str.substr(str.indexOf('\n')+1, str.length-1).replace /\n/g, "\n        "
+  utils = fs.readFileSync 'node_modules/wf-utils/lib/wf-utils.js', 'utf8'
+  fs.writeFileSync 'lib/rikki-tikki-client.js',  _t classes: str, wf_utils: utils
   minify()
 # Callback From 'docco'
 doccoCallback=()->

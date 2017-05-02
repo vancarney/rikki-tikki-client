@@ -3,12 +3,12 @@ fs              = require 'fs'
 _               = (require 'underscore')._
 Backbone        = require 'backbone'
 Backbone.$      = require 'jQuery'
-{RikkiTikki}    = require '../index'
+{APIHero}       = require '../lib/rikki-tikki-client'
 jsonData        = require './data.json'
 server          = true
-API             = RikkiTikki.createScope 'api'
+API             = APIHero.init().createScope 'api'
 # API.API_VERSION = 'v1'
-API.PORT        = 3000
+# API.PORT        = 3000
 
 # `  var wrapError = function(model, options) {
     # var error = options.error;
@@ -103,7 +103,7 @@ describe 'API.Model lifecycle', ->
     # @testModel.save o, h
   it 'should support queries', =>
     o = new API.Model
-    o.params = "?filter=#{JSON.stringify {hello:'kitty'}}"
+    o.params = "?filter=#{JSON.stringify hello:'kitty'}"
     console.log o.url()
   # it 'should delete it\'s self from the API DB', (done)=>
     # h = 

@@ -115,6 +115,7 @@ class $scope.Collection extends Backbone.Collection
   constructor:(attrs, opts={})->
     # passes `arguments` to __super__
     super attrs, opts
+    @model = 
     # writes warning to console if the Object's `className` was not detected
     if (@className ?= $scope.getConstructorName @) == $scope.UNDEFINED_CLASSNAME
       console.warn "#{namespace}.Collection requires className to be defined"
@@ -123,8 +124,10 @@ class $scope.Collection extends Backbone.Collection
       @className = $scope.Inflection.pluralize @className
     # generates model class with ClassName
     @model = $scope.Object.extend className: @className
+    @models = new $scope.SchemaRoller.Vector [$scope.Model]
     # creates new schema from Global Schemas, local schema prototype and opts.schema param
     @__schema = new $scope.Schema _.extend $scope.getSchema( @className ) || {}, @schema, opts.schema || {}
+    (=> Object.seal @)()
   ## Query Methods
   #### equalTo:(col, value)
   or:(queries...)->

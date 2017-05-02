@@ -1,14 +1,16 @@
-fs              = require 'fs'
-(chai           = require 'chai').should()
-_               = (require 'underscore')._
-Backbone        = require 'backbone'
-Backbone.$      = require 'jQuery'
-{RikkiTikki}    = require '../index'
-jsonData        = require './data.json'
-server          = true
-API             = RikkiTikki.createScope 'api'
-API.PORT        = 3000
-
+# fs              = require 'fs'
+# (chai           = require 'chai').should()
+# _               = (require 'underscore')._
+# Backbone        = require 'backbone'
+# Backbone.$      = require 'jQuery'
+# # SchemaRoller    = require 'schemaroller'
+# {APIHero}       = require '../index'
+# jsonData        = require './data.json'
+# server          = true
+# API             = APIHero.createScope 'api'
+# API.PORT        = 3000
+# SchemaRoller    = require 'schemaroller'
+# console.log "SchemaRoller init: #{SchemaRoller}"
 # server          = true
 # service          = require './scripts/server'
 
@@ -21,13 +23,36 @@ API.PORT        = 3000
 
 # init data to test with
 # test = RikkiTikki.createNameSpace 'test'
-API.createSchema 'Products', {
-  name:String
-  price:Number
-  description:String
-}
+# API.createSchema 'Product', {
+  # extensible: true
+  # elements:
+    # relations:
+      # type: 'Object'
+      # required: true
+    # validators:
+      # type: 'Object'
+      # required: true
+    # properties:
+      # type: 'Object'
+      # required: true
+      # elements:
+        # name:
+          # type: "String"
+          # restrict: "/^[a-zA-Z0-9\-_\.\s]{1,128}$/"
+          # required: true
+        # price:
+          # type: Number
+          # required: true
+        # description:
+          # type: "String"
+          # required: true
+        # tags:
+          # type: "String"
+          # restrict: "/^[a-zA-Z0-9\-_\.\s]{1,1028}$/"
+          # required: false
+# }
 
-clazz = class Products extends API.Collection 
+# clazz = class Products extends API.Collection 
 # _.each require( './data/products.json' ).Products, (v,k)=>
   # model = new clazz
   # h = 
@@ -37,8 +62,8 @@ clazz = class Products extends API.Collection
   
 
 
-# describe 'RikkiTikki.Collections Test Suite', ->
-  # it 'should have a pluralized Class Name', =>
+describe 'RikkiTikki.Collections Test Suite', ->
+  it 'should have a pluralized Class Name', =>
     # (@testCol = new clazz).className.should.equal 'Products'
   # it 'should perform a GET', (done)=>
     # @testCol.fetch

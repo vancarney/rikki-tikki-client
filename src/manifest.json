@@ -16,6 +16,7 @@
     "src/classes/schema_item.coffee",
     "src/classes/schema.coffee",
     "src/classes/schema_loader.coffee",
-    "src/classes/query.coffee"
+    "src/classes/query.coffee",
+    "src/classes/namespace.coffee"
   ]
 }

@@ -7,6 +7,7 @@ class $scope.Object extends Backbone.Model
   __schema:{paths:{}, virtuals:{}}
   createOptions:(options)->
     success = options.success || null
+    # to-do: refactor options to sub-cass SchemaRoller.Schema
     _.extend options, {
       success:(m,r,o)=>
         r = {id:null, csrf_token:null, user_email:null} unless r?
@@ -21,25 +22,27 @@ class $scope.Object extends Backbone.Model
     # passes `arguments` to __super__
     super attrs, opts
     # writes warning to console if the Object's `className` was not detected
-    if (@className ?= $scope.getConstructorName @) == $scope.UNDEFINED_CLASSNAME
+    if (@className ?= $scope.wf.wfUtils.Fun.getConstructorName @) == $scope.UNDEFINED_CLASSNAME
       console.warn "#{$scope.namespace}.Object requires className to be defined"
     # pluralizes the `className`
     else
       @className = $scope.Inflection.pluralize @className
-    @setSchema _.extend $scope.getSchema( @className ) || @__schema, opts.schema || {}
-  setSchema:(schema)->
-    @__schema = _.extend @__schema, schema
-    if (methods = @__schema.methods)?
-      _.each methods, (v,k)=> @[k] = ()=> v.apply @, arguments
-    if (virtuals = @__schema.virtuals)?
-      _.each virtuals, (v,k)=> 
-        @[k] = $scope.Function.fromString v
-        # console.log @[k]
-    if (statics = @__schema.statics)?
-      _.each statics, (v,k)=> $scope.Object[k] = $scope.Function.fromString v
-    if @__schema.paths?
-      _.each @__schema.paths, (v,k)=> (@defaults ?= {})[k] = v.default || null
-  getSchema:-> @__schema
+    # @setSchema _.extend $scope.getSchema( @className ) || @__schema, opts.schema || {}
+    @attributes = new $scope.SchemaRoller.Schema $scope.getCollection( @className ) || extensbile: true, elements:type: 'Object'
+    (=> Object.seal? @)()
+  # setSchema:(schema)->
+    # @__schema = _.extend @__schema, schema
+    # if (methods = @__schema.methods)?
+      # _.each methods, (v,k)=> @[k] = ()=> v.apply @, arguments
+    # if (virtuals = @__schema.virtuals)?
+      # _.each virtuals, (v,k)=> 
+        # @[k] = $scope.Function.fromString v
+        # # console.log @[k]
+    # if (statics = @__schema.statics)?
+      # _.each statics, (v,k)=> $scope.Object[k] = $scope.Function.fromString v
+    # if @__schema.paths?
+      # _.each @__schema.paths, (v,k)=> (@defaults ?= {})[k] = v.default || null
+  # getSchema:-> @__schema
   validate:(attrs={}, opts={})->
     if $scope.env != 'development'
       for k,v of attrs
@@ -121,10 +124,10 @@ class $scope.Object extends Backbone.Model
       $scope.Object.saveAll children,
         completed: (m,r,o) =>
           if m.responseText? and (rt = JSON.parse m.responseText) instanceof Array
-            _.each @attributes, (v,k)=>
+            _.each @attributes.valueOf(), (v,k)=>
               if v instanceof $scope.Object and v.get?( 'objectId' ) == rt[0].success.objectId
-                # console.log p = v._toPointer()
-                @attributes[k] = {__op:"AddRelation", objects:[p]} 
+                p = v._toPointer()
+                @attributes.set k, __op:"AddRelation", objects:[p]
           Object.__super__.save.call self, attributes, 
             success: => 
               options.completed? m,r,o
@@ -150,7 +153,7 @@ class $scope.Object extends Backbone.Model
   # > Encodes Object to Parse formatted JSON object
   _toFullJSON: (seenObjects)->
     # loops on `_.clone` of Object attributes and applies `$scope._encodes`
-    _.each (json = _.clone @attributes), (v, k) -> json[key] = $scope._encode v, seenObjects
+    _.each (json = _.clone @attributes.valueOf()), (v, k) -> json[key] = $scope._encode v, seenObjects
     # loops on `__op` and sets to JSON object
     _.each @__op, (v, k) -> json[v] = k
     # sets `objectId` from `id`
@@ -167,6 +170,11 @@ class $scope.Object extends Backbone.Model
     json
   #### nestCollection(attributeName, collection)
   nestCollection: (aName, nCollection) ->
+    # to-do: implement Vector based Collections
+    # unless (_prop = @attributes.get aName) instanceof SchemaRoller.Vector
+      # _prop = new SchemaRoller.Vector 'Collection', _prop
+    # _prop.push.apply @, {0:nCollection}
+    # ----- end to-do ---
     # setup nested references
     for item, i in nCollection
       @attributes[aName][i] = (nCollection.at i).attributes
@@ -333,3 +341,194 @@ $scope.Object.destroyAll = (list, options)->
       options.complete m,r,o if options.complete
     error:(m,r,o)=>
       options.error m,r,o if options.error
+      
+class SchemaModel extends $scope.SchemaRoller.Schema
+  constructor:->
+    super
+      "elements": 
+        "name": 
+          "type": "String"
+          "required": true
+          "restrict": "^[a-zA-Z-0-9_]+$"
+        "description": 
+          "type": "String"
+          "required": false
+          "default": "Add description here"
+          "restrict": "^((?!\"|\b|\\f|\\n|\\r|\\t|\\u).)*$ "
+        "plural": 
+          "type": "String"
+          "required": false
+          "restrict": "^[a-zA-Z-0-9_]+$"
+        "base": 
+          "type": "String"
+          "required": false
+          "restrict": "^[a-zA-Z-0-9_]+$"
+        "http": 
+          "type": "Object"
+          "required": false
+          "elements": 
+            "path": 
+              "type": "String"
+              "required": true
+              "restrict": "^[a-zA-Z-0-9_]+$"
+        "strict": 
+          "type": ["Boolean", "String"]
+          "required": false
+          "default": false
+          "restrict": "^(throw|validate)+$"
+        "options": 
+          "type": "Object"
+          "required": false
+          "extensible": true
+          "default": 
+            "idInjection": false
+          "elements": 
+            "idInjection": 
+              "type": "Boolean"
+              "required": false
+              "default": false
+            "validateUpsert": 
+              "type": "Boolean"
+              "required": false
+              "default": false
+        "properties": 
+          "type": "Object"
+          "required": true
+          "extensible": true
+          "elements": 
+            "default": 
+              "type": "Boolean"
+              "required": false
+            "defaultFn": 
+              "type": "String"
+              "required": false
+              "restrict": "^(guid|uuid|uuidv4|now)+$"
+            "description": 
+              "type": "String"
+              "required": false
+              "restrict": "^((?!\"|\b|\\f|\\n|\\r|\\t|\\u).)*$"
+            "id": 
+              "type": ["Boolean", "Object"]
+              "required": false
+              "elements": 
+                "type": 
+                  "type": "String"
+                  "required": true
+                  "restrict": "^(String|Number)+$"
+                "id": 
+                  "type": "Boolean"
+                  "required": true
+                "generated": 
+                  "type": "Boolean"
+                  "required": false
+            "index": 
+              "type": "Boolean"
+              "required": false
+            "type": 
+              "type": "String"
+              "required": true
+              "restrict": "^(\\*|any|Array|Boolean|Buffer|Date|GeoPoint|Number|Object|String|[a-zA-Z-0-9_])+$"
+            "required": 
+              "type": "Boolean"
+              "required": false
+              "default": false
+            
+            "length": 
+              "type": "Number"
+              "required": false
+              "default": null
+            
+            "precision": 
+              "type": "Number"
+              "required": false
+              "default": null
+            "scale": 
+              "type": "Number"
+              "required": false
+              "default": null
+        "validations": 
+          "type": "Array"
+          "required": false
+          "default": []
+          "elements": [
+            "type": "Object"
+            "required": false
+            "elements": 
+              "default": 
+                "type": "*"
+                "required": true
+              
+              "required": 
+                "type": "Boolean"
+                "required": false
+              
+              "pattern": 
+                "type": "String"
+                "required": false
+              
+              "min": 
+                "type": "Number"
+                "required": false
+              
+              "max": 
+                "type": "Number"
+                "required": false
+              
+              "length": 
+                "type": "Number"
+                "required": false
+            ]
+        "relations": 
+          "type": "Object"
+          "required": false
+          "extensible": true
+          "default": {}
+          "elements":
+            "type": 
+              "type": "String"
+              "required": true
+              "restrict": "^(belongsTo|hasMany|hasManyThrough|hasAndBelongsToMany)+$"
+            "model": 
+              "type": "String"
+              "required": true
+              "restrict": "^[a-zA-Z-0-9_]+$"
+            "foreignKey": 
+              "type": "String"
+              "required": true
+              "restrict": "^[a-zA-Z-0-9_]+$"
+            "polymorphic": [{
+              "type": "String"
+              "required": false
+              "restrict": "^[a-zA-Z-0-9_]+$"
+              },
+              {
+              "type": "Object"
+              "required": false
+              "elements": 
+                "as": 
+                  "type": "String"
+                  "required": true
+                  "restrict": "^[a-zA-Z-0-9_]+$"
+                "foreignKey": 
+                  "type": "String"
+                  "required": "true"
+                  "restrict": "^[a-zA-Z-0-9_]+$"
+                "discriminator": 
+                  "type": "String"
+                  "required": true
+                  "restrict": "^[a-zA-Z-0-9_]+$"
+            }]
+        "scope": 
+          "type": "Object"
+          "required": false
+          "extensible": false
+          "elements":
+            "type": "Object"
+            "required": false
+        "scopes": 
+          "type": "Object"
+          "required": false
+          "extensible": true
+          "elements":
+            "type": "Object"
+            "required": false

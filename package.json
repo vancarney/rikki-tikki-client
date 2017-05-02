@@ -40,9 +40,10 @@
     "lodash": "^4.15.0"
   },
   "devDependencies": {
-    "rikki-tikki": "git+https://github.com/vancarney/rikki-tikki.git",
+    "rikki-tikki": "git+https://github.com/vancarney/rikki-tikki.git#api-hero",
     "rikki-tikki-express": "git+https://github.com/vancarney/rikki-tikki-express.git",
     "schemaroller": "git+https://github.com/vancarney/schemaroller.git",
+    "wf-utils":	"git+https://github.com/webfreshener/wf-utils.git",
     "chai": "^3.5.0",
     "coffee-script": "^1.10.0",
     "docco": "^0.7.0",

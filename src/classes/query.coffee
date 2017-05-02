@@ -10,7 +10,7 @@ class $scope.Query
   constructor:(classOrName)->
     if classOrName?
       @objectClass = if _.isString classOrName then $scope.Object._getSubclass classOrName else classOrName
-      @className = @objectClass.className || $scope.getConstructorName @objectClass
+      @className = @objectClass.className || $scope.wf.wfUtils.Fun.getConstructorName @objectClass
     @or = @_or
     @in = @_in
     @clear()

@@ -1,10 +1,18 @@
 class $scope.SchemaLoader extends $scope.Object
   constructor:(opts={})->
     delete opts.schema if opts.schema?
-    @schema =
-      '__meta__':  Object
-      '__schemas__':  Object
+    @schema = new $scope.SchemaRoller.Schema
+      elements:
+        __meta__:
+          type: 'Object'
+          required: false
+          default: {}
+        __schemas__:
+          type: 'Object'
+          required: false
+          default: {}
     SchemaLoader.__super__.constructor.call @, undefined, opts
+    (=> Object.seal @)()
   url:->
     "#{$scope.getAPIUrl()}/__schema__"
   get:(attr)->

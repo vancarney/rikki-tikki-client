@@ -9,6 +9,9 @@
 #child_process   = require 'child_process'
 #proc            = child_process.spawn 'node', ['./scripts/server']
 
-# myNS.createSchema 'Products', name:String, description:String, price:Number
+# describe 'SchemaLoader Test Suite', ->
+  # before =>
+    # @myNS = APIHero.createScope 'myNS'
+    # @myNS.createSchema 'Products', name:String, description:String, price:Number
 
 

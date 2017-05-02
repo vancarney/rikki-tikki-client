@@ -1,7 +1,7 @@
 class $scope.Singleton extends Object
   constructor:->
     # references the constructor name for the sub-class
-    cName = $scope.getConstructorName @
+    cName = $scope.wf.wfUtils.Fun.getConstructorName @
     # references the caller from the sub-class
     _caller       = arguments.callee.caller.caller
     # references the caller's sub-classee
